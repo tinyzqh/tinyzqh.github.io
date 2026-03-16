@@ -81,24 +81,25 @@ tr,
 p,
 a {
   font-family: 'Lato', Verdana, Helvetica, sans-serif;
-  font-size: 14px;
+  font-size: 15px;
+  line-height: 1.6;
 }
 
 strong {
   font-family: 'Lato', Verdana, Helvetica, sans-serif;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 h2 {
   margin: 0;
   font-weight: normal;
   font-family: 'Lato', Verdana, Helvetica, sans-serif;
-  font-size: 22px;
+  font-size: 24px;
 }
 
 .papertitle {
   font-family: 'Lato', Verdana, Helvetica, sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
 }
 
@@ -107,6 +108,39 @@ h2 {
   margin: 0;
   font-family: 'Lato', Verdana, Helvetica, sans-serif;
   font-size: 32px;
+  font-weight: 700;
+}
+
+/* Page background and main container */
+body {
+  background-color: #f7f7f9;
+  color: #222;
+}
+
+table {
+  /* Keep existing inline widths, but slightly soften global appearance */
+}
+
+/* Optional subtle card styling for main content tables (applied via inline max-width already) */
+table[style*="max-width:900px"] {
+  background-color: #ffffff;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+  border-radius: 16px;
+}
+
+/* Headings spacing */
+h2 {
+  margin: 0 0 8px 0;
+}
+
+/* Publication list tweaks */
+.papertitle {
+  font-size: 15px;
+}
+
+/* Make small meta text slightly softer */
+td p[style*="font-size: 14px"] em {
+  color: #555;
 }
 
 .one {
