@@ -1,0 +1,79 @@
+---
+const pillars = [
+  {
+    title: 'Plasticity',
+    eyebrow: 'Adapting under shift',
+    body: 'Networks that stay malleable when objectives, distributions, and rewards keep changing.',
+    href: '/research#plasticity',
+    accent: 'from-indigo-500/20 to-violet-500/5',
+    glyph: '◐',
+  },
+  {
+    title: 'World Models',
+    eyebrow: 'Imagination as policy',
+    body: 'Learned models that plan, prune, and search — connecting representation to control.',
+    href: '/research#world-models',
+    accent: 'from-cyan-500/20 to-sky-500/5',
+    glyph: '◇',
+  },
+  {
+    title: 'Multi-Agent RL',
+    eyebrow: 'Coordination at scale',
+    body: 'Scalable, reliable cooperation across many agents — from card games to traffic networks.',
+    href: '/research#multi-agent',
+    accent: 'from-emerald-500/15 to-teal-500/5',
+    glyph: '◧',
+  },
+  {
+    title: 'Real-System RL',
+    eyebrow: 'Deployable agents',
+    body: 'Stable, sample-efficient RL for production — adaptive streaming, networking, control.',
+    href: '/research#real-system',
+    accent: 'from-fuchsia-500/15 to-pink-500/5',
+    glyph: '◢',
+  },
+];
+---
+
+<section class="container-wide py-24">
+  <div class="flex items-end justify-between flex-wrap gap-4 mb-12">
+    <div>
+      <p class="text-xs uppercase tracking-[0.22em] text-muted">Research pillars</p>
+      <h2 class="mt-3 text-display-lg font-semibold tracking-tight max-w-[20ch]">
+        Four threads, one goal: <span class="font-serif italic text-fg/85">agents that don't break.</span>
+      </h2>
+    </div>
+    <a href="/research" class="text-sm text-muted hover:text-accent transition inline-flex items-center gap-1">
+      Read all themes
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    {pillars.map(({ title, eyebrow, body, href, accent, glyph }) => (
+      <a
+        href={href}
+        class:list={['spotlight surface group p-6 flex flex-col h-64 transition hover:-translate-y-0.5 hover:ring-accent/40']}
+      >
+        <div class={`absolute inset-0 -z-10 bg-gradient-to-br ${accent} opacity-50 group-hover:opacity-100 transition rounded-2xl`}></div>
+        <div class="flex items-center justify-between">
+          <span class="text-2xl text-accent" aria-hidden="true">{glyph}</span>
+          <span class="text-[10px] uppercase tracking-[0.2em] text-muted/80">{eyebrow}</span>
+        </div>
+        <h3 class="mt-auto text-2xl font-semibold tracking-tight">{title}</h3>
+        <p class="mt-2 text-sm text-muted leading-relaxed">{body}</p>
+      </a>
+    ))}
+  </div>
+</section>
+
+<script>
+  // Cursor spotlight on bento cards
+  document.querySelectorAll<HTMLElement>('.spotlight').forEach((el) => {
+    el.addEventListener('mousemove', (e) => {
+      const rect = el.getBoundingClientRect();
+      el.style.setProperty('--mx', `${e.clientX - rect.left}px`);
+      el.style.setProperty('--my', `${e.clientY - rect.top}px`);
+    });
+  });
+</script>

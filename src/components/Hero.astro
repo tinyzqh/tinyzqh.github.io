@@ -1,0 +1,79 @@
+---
+import HeroCanvas from '~/components/HeroCanvas.tsx';
+---
+
+<section class="relative isolate overflow-hidden min-h-[88vh] flex items-center">
+  <!-- Animated WebGL background, hydrated only when in viewport -->
+  <div class="absolute inset-0 -z-10">
+    <HeroCanvas client:visible />
+  </div>
+
+  <!-- Subtle gradient veil to protect text legibility regardless of shader frame -->
+  <div
+    class="absolute inset-0 -z-10 bg-gradient-to-b from-bg/30 via-bg/10 to-bg pointer-events-none"
+    aria-hidden="true"
+  ></div>
+
+  <div class="container-wide w-full grid lg:grid-cols-12 gap-10 items-end pt-28 pb-20">
+    <div class="lg:col-span-9">
+      <p class="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-muted">
+        <span class="h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_12px_currentColor]"></span>
+        Reinforcement Learning · UEC Tokyo · 2026
+      </p>
+
+      <h1 class="mt-7 text-display-2xl font-semibold tracking-tight">
+        <span class="font-serif italic font-normal text-fg/95">Building</span>
+        <span class="block">
+          <span class="gradient-text">reliable agents</span>
+        </span>
+        <span class="block text-fg/80">under uncertainty.</span>
+      </h1>
+
+      <p class="mt-8 max-w-prose text-lg sm:text-xl text-muted leading-relaxed">
+        I'm <span class="text-fg">Zhiqiang He (何志强)</span> — a Ph.D. researcher at
+        <span class="text-fg">UEC Tokyo</span>, working on
+        <span class="text-fg">plasticity</span>,
+        <span class="text-fg">world models</span>, and large-scale RL systems
+        deployed in real environments.
+      </p>
+
+      <div class="mt-10 flex flex-wrap items-center gap-3">
+        <a href="/research" class="btn-primary group">
+          Read research
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform group-hover:translate-x-0.5" aria-hidden="true">
+            <path d="M5 12h14M13 5l7 7-7 7"/>
+          </svg>
+        </a>
+        <a href="/publications" class="btn-ghost">View publications</a>
+        <a href="mailto:tinyzqh@gmail.com" class="btn-ghost">Get in touch</a>
+      </div>
+    </div>
+
+    <aside class="lg:col-span-3 lg:justify-self-end w-full lg:w-auto">
+      <div class="surface flex items-center gap-3 p-3 max-w-xs">
+        <img
+          src="/images/tinyzqh.jpg"
+          alt="Zhiqiang He"
+          width="56"
+          height="56"
+          class="h-14 w-14 rounded-full object-cover ring-2 ring-accent/30"
+          loading="eager"
+        />
+        <div class="text-sm leading-tight">
+          <p class="text-fg font-medium">Zhiqiang He</p>
+          <p class="text-muted">Open to collaboration</p>
+          <p class="mt-1 inline-flex items-center gap-1.5 text-xs text-emerald-400">
+            <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            Available · Tokyo
+          </p>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Scroll cue -->
+  <div class="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-muted/80">
+    <span class="block h-px w-8 bg-current"></span>
+    Scroll
+  </div>
+</section>

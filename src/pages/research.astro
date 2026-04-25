@@ -1,0 +1,90 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+const themes = (await getCollection('research-themes')).sort(
+  (a, b) => b.data.order - a.data.order
+);
+const allPubs = await getCollection('publications');
+
+const sectionAnchor = (s) =>
+  s.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+
+const renderedThemes = await Promise.all(
+  themes.map(async (t) => {
+    const { Content } = await render(t);
+    const related = t.data.relatedPapers
+      .map((slug) => allPubs.find((p) => p.id === slug))
+      .filter(Boolean);
+    return {
+      entry: t,
+      Content,
+      related,
+      anchor: sectionAnchor(t.data.title),
+    };
+  })
+);
+---
+
+<BaseLayout
+  title="Research"
+  description="Research themes by Zhiqiang He: plasticity, world models, multi-agent RL, and real-system reinforcement learning."
+>
+  <section class="container-wide pt-24 pb-12">
+    <p class="text-xs uppercase tracking-[0.22em] text-muted">Research</p>
+    <h1 class="mt-4 text-display-xl font-semibold tracking-tight max-w-[18ch]">
+      Four threads, <span class="font-serif italic text-fg/85">one practice.</span>
+    </h1>
+    <p class="mt-6 max-w-prose text-lg text-muted">
+      I work on reinforcement learning, with an emphasis on the parts that determine
+      whether an agent will survive deployment: <span class="text-fg">plasticity</span>,
+      <span class="text-fg">world models</span>,
+      <span class="text-fg">multi-agent coordination</span>, and
+      <span class="text-fg">real-system constraints</span>.
+    </p>
+  </section>
+
+  <nav class="container-wide flex flex-wrap gap-2 pb-12">
+    {renderedThemes.map((rt) => (
+      <a
+        href={`#${rt.anchor}`}
+        class="pill hover:ring-accent/40 hover:text-fg transition"
+      >
+        <span class="text-accent" aria-hidden="true">{rt.entry.data.icon}</span>
+        {rt.entry.data.title}
+      </a>
+    ))}
+  </nav>
+
+  {renderedThemes.map((rt) => (
+    <section id={rt.anchor} class="container-wide max-w-prose py-16 scroll-mt-24">
+      <p class="text-xs uppercase tracking-[0.22em] text-muted flex items-center gap-2">
+        <span class="text-accent text-base" aria-hidden="true">{rt.entry.data.icon}</span>
+        {rt.entry.data.title}
+      </p>
+      <h2 class="mt-4 text-display-md font-semibold tracking-tight">
+        {rt.entry.data.summary}
+      </h2>
+      <div class="mt-8 text-lg text-fg/85 leading-relaxed prose-fg space-y-5">
+        <rt.Content />
+      </div>
+      {rt.related.length > 0 && (
+        <div class="mt-10 surface p-5">
+          <p class="text-xs uppercase tracking-[0.22em] text-muted mb-3">Related papers</p>
+          <ul class="space-y-2 text-sm">
+            {rt.related.map((p) => (
+              <li>
+                <a href={`/publications/${p.id}/`} class="group inline-flex flex-wrap items-baseline gap-2">
+                  <span class="text-fg group-hover:text-accent transition">{p.data.title}</span>
+                  <span class="text-muted text-xs">
+                    {p.data.venueShort ?? p.data.venue} · {p.data.year}
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </section>
+  ))}
+</BaseLayout>

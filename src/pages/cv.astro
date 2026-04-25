@@ -1,0 +1,183 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const pubs = (await getCollection('publications')).sort((a, b) => {
+  if (b.data.year !== a.data.year) return b.data.year - a.data.year;
+  return b.data.order - a.data.order;
+});
+
+const sections = [
+  { id: 'profile', label: 'Profile' },
+  { id: 'education', label: 'Education' },
+  { id: 'experience', label: 'Experience' },
+  { id: 'publications', label: 'Publications' },
+  { id: 'awards', label: 'Awards' },
+  { id: 'service', label: 'Service' },
+];
+---
+
+<BaseLayout
+  title="CV"
+  description="Curriculum vitae of Zhiqiang He — Ph.D. researcher at UEC Tokyo, working on reinforcement learning."
+>
+  <div class="container-wide pt-20 pb-24 grid lg:grid-cols-[200px_minmax(0,1fr)] gap-12">
+    <aside class="hidden lg:block">
+      <nav class="sticky top-20 text-sm">
+        <p class="text-xs uppercase tracking-[0.22em] text-muted mb-3">CV</p>
+        <ul class="space-y-1.5">
+          {sections.map((s) => (
+            <li>
+              <a href={`#${s.id}`} class="text-muted hover:text-accent transition">{s.label}</a>
+            </li>
+          ))}
+        </ul>
+        <a href="/data/CVZhiqiangHe.pdf" class="btn-ghost mt-8 w-full justify-center" target="_blank" rel="noopener">
+          Download PDF
+        </a>
+      </nav>
+    </aside>
+
+    <article class="max-w-prose space-y-14">
+      <header id="profile" class="scroll-mt-24">
+        <p class="text-xs uppercase tracking-[0.22em] text-muted">Curriculum Vitae</p>
+        <h1 class="mt-3 text-display-lg font-semibold tracking-tight">Zhiqiang He · 何志强</h1>
+        <p class="mt-4 text-muted">
+          Ph.D. researcher · University of Electro-Communications, Tokyo
+        </p>
+        <p class="mt-2 text-sm text-muted">
+          <a href="mailto:tinyzqh@gmail.com" class="hover:text-accent transition">tinyzqh@gmail.com</a> ·
+          <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=v6o0Dz8AAAAJ" target="_blank" rel="noopener" class="hover:text-accent transition">Google Scholar</a> ·
+          <a href="https://github.com/tinyzqh" target="_blank" rel="noopener" class="hover:text-accent transition">GitHub</a> ·
+          <a href="https://www.zhihu.com/people/zhiqianghe" target="_blank" rel="noopener" class="hover:text-accent transition">Zhihu</a>
+        </p>
+        <p class="mt-6 text-fg/85 leading-relaxed">
+          Reinforcement learning researcher with seven Q1 publications across IEEE TMM,
+          IEEE Communications Surveys & Tutorials, Pattern Recognition, Information Sciences,
+          and Communications in Transportation Research. Industry experience at
+          Baidu and InspirAI shipping RL agents into production.
+        </p>
+      </header>
+
+      <section id="education" class="scroll-mt-24">
+        <h2 class="text-xs uppercase tracking-[0.22em] text-muted">Education</h2>
+        <ul class="mt-6 space-y-6">
+          <li class="grid sm:grid-cols-[120px_1fr] gap-2 sm:gap-6">
+            <span class="text-sm text-muted">2024 — present</span>
+            <div>
+              <p class="text-fg font-medium">Ph.D. in Information Science</p>
+              <p class="text-sm text-muted">University of Electro-Communications (UEC), Tokyo</p>
+              <p class="text-sm mt-1">Advised by <a class="text-accent hover:underline" href="https://scholar.google.com/citations?user=95oIprAAAAAJ&hl=en" target="_blank" rel="noopener">Prof. Zhi Liu</a>.</p>
+            </div>
+          </li>
+          <li class="grid sm:grid-cols-[120px_1fr] gap-2 sm:gap-6">
+            <span class="text-sm text-muted">2019 — 2022</span>
+            <div>
+              <p class="text-fg font-medium">M.S. in Control Science and Engineering</p>
+              <p class="text-sm text-muted">Northeastern University (NEU), Shenyang</p>
+              <p class="text-sm mt-1">Advised by <a class="text-accent hover:underline" href="http://faculty.neu.edu.cn/wangjiao/zh_CN/zhym/75393/list/index.htm" target="_blank" rel="noopener">Prof. Jiao Wang</a>. GPA 3.29 / 4.</p>
+            </div>
+          </li>
+          <li class="grid sm:grid-cols-[120px_1fr] gap-2 sm:gap-6">
+            <span class="text-sm text-muted">2015 — 2019</span>
+            <div>
+              <p class="text-fg font-medium">B.S. in Automation</p>
+              <p class="text-sm text-muted">East China Jiaotong University (ECJTU), Nanchang</p>
+              <p class="text-sm mt-1">Outstanding Graduate (Top 1%). GPA 3.42 / 4.</p>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <section id="experience" class="scroll-mt-24">
+        <h2 class="text-xs uppercase tracking-[0.22em] text-muted">Experience</h2>
+        <ul class="mt-6 space-y-6">
+          <li class="grid sm:grid-cols-[120px_1fr] gap-2 sm:gap-6">
+            <span class="text-sm text-muted">Jun 2022 — May 2023</span>
+            <div>
+              <p class="text-fg font-medium">Reinforcement Learning Algorithms Engineer · InspirAI</p>
+              <p class="text-sm text-muted">Hangzhou, China · Top-Performing Team Prize</p>
+              <ul class="mt-2 space-y-1 text-sm text-fg/85 leading-relaxed">
+                <li>— Built a general-purpose card-game AI SDK deployed across 三国杀, 炉石, 斗地主, 掼蛋.</li>
+                <li>— Drove a +6% win-rate improvement on the GuanDan deployment.</li>
+              </ul>
+            </div>
+          </li>
+          <li class="grid sm:grid-cols-[120px_1fr] gap-2 sm:gap-6">
+            <span class="text-sm text-muted">Jun 2021 — Oct 2021</span>
+            <div>
+              <p class="text-fg font-medium">Reinforcement Learning Research Intern · Baidu</p>
+              <p class="text-sm text-muted">Beijing, China · Super Special Offer</p>
+              <ul class="mt-2 space-y-1 text-sm text-fg/85 leading-relaxed">
+                <li>— Proposed and shipped EDA-MAPPO (Expert-Data-Assisted MAPPO) into a client production environment.</li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <section id="publications" class="scroll-mt-24">
+        <h2 class="text-xs uppercase tracking-[0.22em] text-muted">Publications</h2>
+        <ol class="mt-6 space-y-5 text-sm">
+          {pubs.map((p, i) => (
+            <li class="grid sm:grid-cols-[28px_1fr] gap-3">
+              <span class="text-muted/60 tabular-nums">{String(i + 1).padStart(2, '0')}</span>
+              <div>
+                <a href={`/publications/${p.id}/`} class="text-fg hover:text-accent transition leading-snug">
+                  {p.data.title}
+                </a>
+                <p class="mt-1 text-muted">
+                  {p.data.authors.map((a, idx) => (
+                    <>
+                      <span class={a.me ? 'text-fg' : ''}>{a.name}</span>{a.corresponding && <sup class="text-accent">*</sup>}{idx < p.data.authors.length - 1 ? ', ' : ''}
+                    </>
+                  ))}
+                </p>
+                <p class="mt-1 text-muted/80 italic">
+                  {p.data.venue} · {p.data.year}
+                  {p.data.impactFactor && <span> · IF {p.data.impactFactor}</span>}
+                  {p.data.quartile && <span> · {p.data.quartile}</span>}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section id="awards" class="scroll-mt-24">
+        <h2 class="text-xs uppercase tracking-[0.22em] text-muted">Awards</h2>
+        <ul class="mt-6 space-y-3 text-fg/90 leading-relaxed">
+          <li>JST Next-Generation Researcher · ¥2.2M / year, 2025-2027</li>
+          <li>Outstanding Graduate (Top 1%), East China Jiaotong University, 2019</li>
+          <li>Honorable Mention, Mathematical Contest in Modeling (MCM), 2018</li>
+          <li>Third Prize, 15th Challenge Cup, Jiangxi Division, 2017</li>
+        </ul>
+      </section>
+
+      <section id="service" class="scroll-mt-24">
+        <h2 class="text-xs uppercase tracking-[0.22em] text-muted">Service</h2>
+        <p class="mt-4 text-muted">Peer reviewer for:</p>
+        <ul class="mt-3 space-y-1.5 text-fg/90">
+          <li>— ACM Multimedia (ACM MM 2026)</li>
+          <li>— IEEE Transactions on Network Science and Engineering</li>
+          <li>— IEEE Internet of Things Journal</li>
+          <li>— IEEE Open Journal of the Computer Society</li>
+        </ul>
+      </section>
+
+      <p class="text-xs text-muted pt-12">
+        Last updated {new Date().toISOString().slice(0, 10)} ·
+        <a href="/data/CVZhiqiangHe.pdf" target="_blank" rel="noopener" class="hover:text-accent transition">Download PDF</a>
+      </p>
+    </article>
+  </div>
+
+  <style>
+    @media print {
+      header, footer, aside, nav, .no-print { display: none !important; }
+      body { background: white !important; color: black !important; }
+      .surface, .pill { background: white !important; box-shadow: none !important; ring: 0 !important; }
+      a { color: black !important; }
+    }
+  </style>
+</BaseLayout>

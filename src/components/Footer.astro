@@ -1,0 +1,42 @@
+---
+const year = new Date().getFullYear();
+
+const links = [
+  { href: 'mailto:tinyzqh@gmail.com', label: 'Email' },
+  { href: 'https://scholar.google.com.hk/citations?hl=zh-CN&user=v6o0Dz8AAAAJ', label: 'Google Scholar' },
+  { href: 'https://github.com/tinyzqh/', label: 'GitHub' },
+  { href: 'https://www.zhihu.com/people/zhiqianghe', label: 'Zhihu' },
+  { href: '/data/CVZhiqiangHe.pdf', label: 'CV' },
+];
+---
+
+<footer class="mt-24 border-t border-border/50">
+  <div class="container-wide py-10 grid gap-8 sm:grid-cols-2 md:grid-cols-3">
+    <div>
+      <p class="text-sm font-medium text-fg">Zhiqiang He · 何志强</p>
+      <p class="mt-1 text-sm text-muted">
+        Ph.D. researcher · UEC Tokyo<br />
+        Reinforcement Learning & Systems Intelligence
+      </p>
+    </div>
+
+    <div class="text-sm">
+      <p class="text-muted mb-2">Elsewhere</p>
+      <ul class="space-y-1">
+        {links.map(({ href, label }) => (
+          <li>
+            <a href={href} class="text-fg/80 hover:text-accent transition" target="_blank" rel="noopener">
+              {label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="text-sm text-muted md:text-right">
+      <p class="text-fg/80">Open to collaboration.</p>
+      <a href="mailto:tinyzqh@gmail.com" class="hover:text-accent transition">tinyzqh@gmail.com</a>
+      <p class="mt-3 text-xs">© {year} Zhiqiang He.</p>
+    </div>
+  </div>
+</footer>

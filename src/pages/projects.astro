@@ -1,0 +1,78 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const projects = (await getCollection('projects')).sort(
+  (a, b) => b.data.order - a.data.order
+);
+---
+
+<BaseLayout
+  title="Projects"
+  description="Open-source projects by Zhiqiang He on reinforcement learning, plasticity, and adaptive streaming."
+>
+  <section class="container-wide pt-24 pb-12">
+    <p class="text-xs uppercase tracking-[0.22em] text-muted">Projects</p>
+    <h1 class="mt-4 text-display-xl font-semibold tracking-tight max-w-[20ch]">
+      Code I've put <span class="font-serif italic text-fg/85">in the world.</span>
+    </h1>
+    <p class="mt-6 max-w-prose text-lg text-muted">
+      Open-source releases tied to my research. Most live under the
+      <a href="https://github.com/Systems-Intelligent-Lab" class="text-fg hover:text-accent transition" target="_blank" rel="noopener">Systems-Intelligent-Lab</a>
+      organization, with archival mirrors on
+      <a href="https://github.com/tinyzqh" class="text-fg hover:text-accent transition" target="_blank" rel="noopener">my personal GitHub</a>.
+    </p>
+  </section>
+
+  <section class="container-wide pb-24">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {projects.map((p) => (
+        <a
+          href={p.data.repo ?? '#'}
+          target={p.data.repo ? '_blank' : undefined}
+          rel={p.data.repo ? 'noopener' : undefined}
+          class="spotlight surface group p-6 flex flex-col h-72 transition hover:-translate-y-0.5 hover:ring-accent/40"
+        >
+          <div class="flex items-center justify-between">
+            <span class="font-mono text-xs text-accent">{'</>'}</span>
+            <span class="text-[10px] uppercase tracking-[0.2em] text-muted">{p.data.tags[0] ?? 'project'}</span>
+          </div>
+          <h3 class="mt-6 text-2xl font-semibold tracking-tight">{p.data.title}</h3>
+          <p class="mt-2 text-fg/80 text-sm font-serif italic">{p.data.tagline}</p>
+          <p class="mt-4 text-sm text-muted leading-relaxed line-clamp-4">{p.data.description}</p>
+          <div class="mt-auto pt-4 flex items-center justify-between">
+            <div class="flex flex-wrap gap-1.5">
+              {p.data.tags.slice(0, 3).map((t) => (
+                <span class="pill text-[10px]">{t}</span>
+              ))}
+            </div>
+            <span class="text-muted group-hover:text-accent transition" aria-hidden="true">↗</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="container-wide pb-24 max-w-prose">
+    <p class="text-xs uppercase tracking-[0.22em] text-muted">Looking ahead</p>
+    <h2 class="mt-4 text-display-md font-semibold tracking-tight">
+      Where I'd like to push next.
+    </h2>
+    <ul class="mt-8 space-y-3 text-fg/85 text-lg leading-relaxed">
+      <li>— Reinforcement learning algorithms and theory under continual shift</li>
+      <li>— Large-scale and data-efficient RL with deployable cost</li>
+      <li>— Stable, robust control for embedded and real-time systems</li>
+      <li>— Continual / sustainable learning grounded in world models</li>
+    </ul>
+  </section>
+
+  <script>
+    document.querySelectorAll<HTMLElement>('.spotlight').forEach((el) => {
+      el.addEventListener('mousemove', (e) => {
+        const rect = el.getBoundingClientRect();
+        el.style.setProperty('--mx', `${e.clientX - rect.left}px`);
+        el.style.setProperty('--my', `${e.clientY - rect.top}px`);
+      });
+    });
+  </script>
+</BaseLayout>

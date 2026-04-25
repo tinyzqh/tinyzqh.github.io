@@ -1,0 +1,25 @@
+---
+title: "Multi-Agent RL"
+icon: "◧"
+summary: "Scalable, reliable cooperation across many agents — from card games to traffic networks."
+order: 80
+relatedPapers:
+  - "2025-marl-traffic"
+---
+
+Real coordination problems rarely fit neatly into the single-agent frame. My work in
+multi-agent RL focuses on **action-space design** and **scalability** — making sure
+that as the agent count grows, both training and inference remain feasible.
+
+- *Scalable and Reliable MARL for Traffic Assignment* (*Communications in Transportation
+  Research* 2025, IF 14.5) targets city-scale traffic networks, with an action-space
+  formulation that handles fleets of agents without combinatorial blow-up.
+
+- During my time at *InspirAI* (2022–2023), I built a general-purpose card-game AI
+  framework deployed across 三国杀, 炉石, 斗地主, and 掼蛋 — the GuanDan deployment
+  delivered a **+6% win rate** against the previous baseline.
+
+- At *Baidu* (2021), I proposed and shipped *EDA-MAPPO* (Expert-Data-Assisted MAPPO),
+  pushing a multi-agent policy directly into a client production environment.
+
+The throughline: multi-agent RL only matters if it survives contact with deployment.

@@ -1,0 +1,55 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import PublicationCard from '~/components/PublicationCard.astro';
+
+const all = (await getCollection('publications')).sort((a, b) => {
+  if (b.data.year !== a.data.year) return b.data.year - a.data.year;
+  return b.data.order - a.data.order;
+});
+
+// Group by year for visual chunking
+const grouped = all.reduce<Record<number, typeof all>>((acc, p) => {
+  (acc[p.data.year] ||= []).push(p);
+  return acc;
+}, {});
+const years = Object.keys(grouped).map(Number).sort((a, b) => b - a);
+---
+
+<BaseLayout
+  title="Publications"
+  description="Selected publications by Zhiqiang He on reinforcement learning, plasticity, world models, multi-agent RL, and DRL applications."
+>
+  <section class="container-wide pt-24 pb-12">
+    <p class="text-xs uppercase tracking-[0.22em] text-muted">Publications</p>
+    <h1 class="mt-4 text-display-xl font-semibold tracking-tight max-w-[18ch]">
+      Things I've <span class="font-serif italic text-fg/85">written down.</span>
+    </h1>
+    <p class="mt-6 max-w-prose text-lg text-muted">
+      Peer-reviewed papers and preprints, sorted by year. <span class="text-fg">Bold</span> = me.
+      <sup class="text-accent">*</sup> denotes corresponding author.
+    </p>
+  </section>
+
+  {years.map((year) => (
+    <section class="container-wide py-8">
+      <div class="flex items-baseline gap-4 mb-6">
+        <h2 class="font-serif italic text-display-md text-fg/85">{year}</h2>
+        <span class="text-xs uppercase tracking-[0.18em] text-muted">{grouped[year].length} {grouped[year].length === 1 ? 'paper' : 'papers'}</span>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {grouped[year].map((p) => <PublicationCard pub={p} />)}
+      </div>
+    </section>
+  ))}
+
+  <script>
+    document.querySelectorAll<HTMLElement>('.spotlight').forEach((el) => {
+      el.addEventListener('mousemove', (e) => {
+        const rect = el.getBoundingClientRect();
+        el.style.setProperty('--mx', `${e.clientX - rect.left}px`);
+        el.style.setProperty('--my', `${e.clientY - rect.top}px`);
+      });
+    });
+  </script>
+</BaseLayout>

@@ -1,0 +1,98 @@
+---
+import '~/styles/global.css';
+import Header from '~/components/Header.astro';
+import Footer from '~/components/Footer.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  ogType?: 'website' | 'profile' | 'article';
+  noIndex?: boolean;
+}
+
+const {
+  title = 'Zhiqiang He',
+  description = 'Ph.D. researcher at the University of Electro-Communications (UEC), Tokyo. Working on reinforcement learning, plasticity, world models, and large-scale RL deployment in real systems.',
+  image = '/images/profile.jpg',
+  ogType = 'website',
+  noIndex = false,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL(image, Astro.site).href;
+const fullTitle = title === 'Zhiqiang He' ? title : `${title} · Zhiqiang He`;
+
+const personJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Zhiqiang He',
+  alternateName: '何志强',
+  url: 'https://tinyzqh.github.io/',
+  image: ogImage,
+  email: 'tinyzqh@gmail.com',
+  jobTitle: 'Ph.D. Student',
+  affiliation: {
+    '@type': 'Organization',
+    name: 'University of Electro-Communications',
+    url: 'https://www.uec.ac.jp/eng/',
+  },
+  sameAs: [
+    'https://scholar.google.com.hk/citations?hl=zh-CN&user=v6o0Dz8AAAAJ',
+    'https://github.com/tinyzqh',
+    'https://www.zhihu.com/people/zhiqianghe',
+  ],
+};
+---
+
+<!DOCTYPE html>
+<html lang="en" class="dark" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/x-icon" href="/images/favicon/favicon.ico" />
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content="Zhiqiang He" />
+    {noIndex && <meta name="robots" content="noindex" />}
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <script is:inline>
+      // Set theme before paint to avoid flash
+      const stored = localStorage.getItem('theme');
+      const prefersLight = stored === 'light' || (!stored && window.matchMedia('(prefers-color-scheme: light)').matches);
+      const root = document.documentElement;
+      if (prefersLight) {
+        root.classList.add('light');
+        root.classList.remove('dark');
+        root.dataset.theme = 'light';
+      } else {
+        root.classList.add('dark');
+        root.classList.remove('light');
+        root.dataset.theme = 'dark';
+      }
+    </script>
+
+    <script type="application/ld+json" set:html={JSON.stringify(personJsonLd)} />
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <Header />
+    <main class="flex-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
