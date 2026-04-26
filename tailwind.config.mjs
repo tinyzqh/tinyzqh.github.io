@@ -18,8 +18,8 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Geist', 'Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', '"PingFang SC"', '"Hiragino Sans GB"', '"Microsoft YaHei"', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
-        serif: ['"Instrument Serif"', 'ui-serif', 'Georgia', '"Songti SC"', 'serif'],
+        sans: ['Geist', 'Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', '"Noto Sans SC"', '"PingFang SC"', '"Hiragino Sans GB"', '"Microsoft YaHei"', '"WenQuanYi Micro Hei"', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+        serif: ['"Instrument Serif"', 'ui-serif', 'Georgia', '"Noto Sans SC"', '"Songti SC"', '"PingFang SC"', 'serif'],
         mono: ['"Geist Mono"', 'ui-monospace', '"JetBrains Mono"', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
       },
       fontSize: {

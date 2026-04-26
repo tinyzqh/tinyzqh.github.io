@@ -29,7 +29,6 @@ const publications = defineCollection({
     selected: z.boolean().default(false),
     order: z.number().default(0),
     abstract: z.string().optional(),
-    bibtex: z.string().optional(),
     note: z.string().optional(),
   }),
 });
