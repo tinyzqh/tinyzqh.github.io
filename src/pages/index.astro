@@ -1,0 +1,23 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Hero from '~/components/Hero.astro';
+import StatStrip from '~/components/StatStrip.astro';
+import Marquee from '~/components/Marquee.astro';
+import Bento from '~/components/Bento.astro';
+import FeaturedPublications from '~/components/FeaturedPublications.astro';
+import Timeline from '~/components/Timeline.astro';
+import Cta from '~/components/Cta.astro';
+---
+
+<BaseLayout
+  title="Zhiqiang He"
+  description="Personal site of Zhiqiang He (何志强) — Ph.D. researcher at UEC Tokyo. Reinforcement learning, plasticity, world models, and large-scale RL deployment in real systems."
+>
+  <Hero />
+  <StatStrip />
+  <Marquee />
+  <Bento />
+  <FeaturedPublications />
+  <Timeline />
+  <Cta />
+</BaseLayout>

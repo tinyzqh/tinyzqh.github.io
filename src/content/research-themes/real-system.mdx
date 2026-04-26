@@ -1,0 +1,27 @@
+---
+title: "Real-System RL"
+icon: "◢"
+summary: "Stable, sample-efficient RL for production — adaptive streaming, networking, control."
+order: 70
+relatedPapers:
+  - "2026-pa-moe"
+  - "2025-uav-survey"
+  - "2018-rlpid"
+---
+
+A lot of "RL works" in papers fail to hold up under the constraints of a real system —
+non-stationarity, partial observability, hard latency budgets, safety boundaries.
+My applied work focuses on RL that is **deployable**, not merely demonstrable.
+
+- **Adaptive video streaming** (*IEEE TMM* 2026) — plasticity-aware policies for QoE
+  shifts. The deployed system has to keep performing as networks and content evolve.
+
+- **UAV communications and networking** (*IEEE Communications Surveys & Tutorials*
+  2025, IF 42.8) — a survey of how DRL fundamentals apply to a domain with strict
+  reliability and latency constraints.
+
+- **Speed servo control** (*Algorithms* 2018) — one of the early works applying deep
+  RL to jump speed servo systems. Cited 58×.
+
+What I've taken from each: **stability beats peak performance**, and a system that
+is only marginally better but never explodes is the one that ships.

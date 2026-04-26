@@ -1,0 +1,31 @@
+---
+const venues = [
+  'IEEE Transactions on Multimedia',
+  'IEEE Communications Surveys & Tutorials',
+  'Pattern Recognition',
+  'Information Sciences',
+  'Communications in Transportation Research',
+  'IEEE Internet of Things Journal',
+  'IEEE TNSE',
+  'ACM Multimedia',
+  'Algorithms',
+];
+// Duplicate so the marquee can loop seamlessly
+const items = [...venues, ...venues];
+---
+
+<section class="py-12 sm:py-16">
+  <p class="container-wide text-xs uppercase tracking-[0.2em] text-muted/80 mb-6">
+    Selected venues · reviewing & publishing
+  </p>
+  <div class="relative marquee-mask overflow-hidden">
+    <div class="flex gap-12 w-max animate-marquee will-change-transform" aria-hidden="true">
+      {items.map((v) => (
+        <span class="text-lg sm:text-xl font-serif italic text-fg/55 whitespace-nowrap">
+          {v}
+          <span class="ml-12 text-accent/40">◆</span>
+        </span>
+      ))}
+    </div>
+  </div>
+</section>

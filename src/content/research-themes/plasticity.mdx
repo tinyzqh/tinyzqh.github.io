@@ -1,0 +1,26 @@
+---
+title: "Plasticity"
+icon: "◐"
+summary: "Networks that stay malleable when objectives, distributions, and rewards keep changing."
+order: 100
+relatedPapers:
+  - "2026-pa-moe"
+---
+
+A common failure mode in long-running RL is that the network gradually loses its ability
+to adapt — gradients shrink, features ossify, performance plateaus even when more data
+arrives. This is **plasticity loss**.
+
+My recent work tackles plasticity from two angles:
+
+1. **Architectural** — *Plasticity-Aware Mixture of Experts* (PA-MoE) routes traffic
+   between experts so that the system as a whole stays adaptive even when individual
+   experts saturate. We provide theoretical justification and validate on adaptive
+   video streaming under non-stationary QoE.
+
+2. **Diagnostic** — companion preprints characterize the conditions under which
+   plasticity collapses, and propose remedies that can be folded into existing
+   pipelines.
+
+The long-term goal is to produce **continually learning agents** that don't need to be
+restarted from scratch every time the environment shifts.

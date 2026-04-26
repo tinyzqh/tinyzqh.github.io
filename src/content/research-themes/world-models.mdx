@@ -1,0 +1,26 @@
+---
+title: "World Models"
+icon: "◇"
+summary: "Learned models that plan, prune, and search — connecting representation to control."
+order: 90
+relatedPapers:
+  - "2024-mspp"
+  - "2022-erlang"
+---
+
+Model-based RL promises sample efficiency: if an agent can simulate its environment
+accurately, it can plan instead of just react. The catch is that imperfect models
+compound errors over rollout horizons, so the value of "imagination" decays quickly.
+
+My work in this thread asks how to make rollouts **more useful per step**:
+
+- *Multi-Step Pruning Policy* (MSPP, *Information Sciences* 2024) introduces parallel
+  pruning policies that diversify rollouts and lift sample efficiency. We give a
+  convergence analysis and a corresponding policy gradient theorem.
+
+- *Erlang Planning Network* (*Pattern Recognition* 2022) is an iterative model-based
+  framework that views planning from multiple perspectives, treating planning depth
+  as an adaptive resource.
+
+What ties these together is the view of a world model not as a passive simulator,
+but as a **structured space** that policies can search inside.

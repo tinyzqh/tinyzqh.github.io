@@ -1,0 +1,202 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const pubs = await getCollection('publications');
+  return pubs.map((pub) => ({ params: { id: pub.id }, props: { pub } }));
+}
+
+const { pub } = Astro.props;
+const { data } = pub;
+const { Content } = await render(pub);
+
+// Compute prev / next within sorted list
+const all = (await getCollection('publications')).sort((a, b) => {
+  if (b.data.year !== a.data.year) return b.data.year - a.data.year;
+  return b.data.order - a.data.order;
+});
+const idx = all.findIndex((p) => p.id === pub.id);
+const prev = idx > 0 ? all[idx - 1] : null;
+const next = idx < all.length - 1 ? all[idx + 1] : null;
+
+const statusLabel: Record<string, string> = {
+  accepted: 'Accepted',
+  published: 'Published',
+  preprint: 'Preprint',
+  'under-review': 'Under review',
+};
+---
+
+<BaseLayout
+  title={data.title}
+  description={data.abstract ?? data.title}
+  image={data.image ?? '/images/profile.jpg'}
+  ogType="article"
+>
+  <!-- Hero band with subtle gradient -->
+  <section class="relative isolate overflow-hidden border-b border-border/40">
+    <div class="absolute inset-0 -z-10 opacity-50 pointer-events-none" aria-hidden="true">
+      <div class="absolute -top-40 left-1/4 h-[420px] w-[420px] rounded-full bg-accent/15 blur-[140px]"></div>
+      <div class="absolute -bottom-32 right-0 h-[340px] w-[340px] rounded-full bg-cyan-500/10 blur-[140px]"></div>
+    </div>
+
+    <div class="container-wide pt-20 pb-14">
+      <p class="text-xs uppercase tracking-[0.22em] text-muted">
+        <a href="/publications" class="hover:text-accent transition">Publications</a>
+        <span class="mx-2 text-muted/40">/</span>
+        <span>{data.year}</span>
+      </p>
+
+      <h1 class="mt-6 text-display-lg font-semibold tracking-tight max-w-[28ch]">
+        {data.title}
+      </h1>
+
+      <p class="mt-6 text-base sm:text-lg text-muted leading-relaxed max-w-prose">
+        {data.authors.map((a, i) => (
+          <>
+            <span class={a.me ? 'text-fg font-semibold' : ''}>{a.name}</span>{a.corresponding && <sup class="text-accent">*</sup>}{i < data.authors.length - 1 ? <span class="text-muted/60">,&nbsp;</span> : null}
+          </>
+        ))}
+      </p>
+
+      <div class="mt-6 flex flex-wrap items-center gap-2">
+        <span class="pill bg-bg-elevated/70 backdrop-blur">
+          <em class="not-italic font-medium text-fg/90">{data.venue}</em>
+          <span class="text-muted/60">·</span>
+          <span class="tabular-nums">{data.year}</span>
+        </span>
+        {data.quartile && (
+          <span class="pill bg-accent/15 ring-accent/30 text-accent">
+            {data.quartile}{data.impactFactor ? ` · IF ${data.impactFactor}` : ''}
+          </span>
+        )}
+        <span class="pill text-muted">{statusLabel[data.status] ?? data.status}</span>
+        {data.tags.map((t) => (
+          <span class="pill text-muted/80">{t}</span>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Two-column body -->
+  <div class="container-wide py-16 grid lg:grid-cols-[minmax(0,1fr)_300px] gap-12">
+    <article class="min-w-0">
+      <!-- Image, framed -->
+      {data.image && (
+        <figure class="surface overflow-hidden mb-12">
+          <img src={data.image} alt="" class="w-full object-cover" loading="lazy" />
+          <figcaption class="px-6 py-3 text-xs text-muted border-t border-border/50 bg-bg-elevated/40">
+            Figure · {data.title}
+          </figcaption>
+        </figure>
+      )}
+
+      <!-- Abstract with decorative quote -->
+      {data.abstract && (
+        <section class="mb-14 max-w-prose">
+          <p class="text-xs uppercase tracking-[0.22em] text-muted mb-4">Abstract</p>
+          <div class="relative pl-7">
+            <span aria-hidden="true" class="absolute left-0 top-0 font-serif text-5xl leading-none text-accent/50 select-none">"</span>
+            <p class="text-lg text-fg/95 leading-relaxed font-serif">
+              {data.abstract}
+            </p>
+          </div>
+        </section>
+      )}
+
+      <!-- Body content -->
+      <section class="max-w-prose text-fg/90 leading-relaxed prose-fg space-y-5 text-base sm:text-lg">
+        <Content />
+      </section>
+
+      {data.note && (
+        <p class="mt-12 text-sm text-muted italic max-w-prose border-l-2 border-accent/40 pl-4">
+          {data.note}
+        </p>
+      )}
+
+      <!-- Prev / next -->
+      <nav class="mt-20 grid sm:grid-cols-2 gap-4 max-w-prose pt-8 border-t border-border/40">
+        {prev ? (
+          <a href={`/publications/${prev.id}/`} class="group surface p-5">
+            <p class="text-[10px] uppercase tracking-[0.22em] text-muted">← Newer</p>
+            <p class="mt-2 text-sm font-medium text-fg/90 group-hover:text-accent transition leading-snug line-clamp-2">{prev.data.title}</p>
+            <p class="mt-1 text-xs text-muted">{prev.data.venueShort ?? prev.data.venue} · {prev.data.year}</p>
+          </a>
+        ) : <span></span>}
+        {next ? (
+          <a href={`/publications/${next.id}/`} class="group surface p-5 sm:text-right">
+            <p class="text-[10px] uppercase tracking-[0.22em] text-muted">Older →</p>
+            <p class="mt-2 text-sm font-medium text-fg/90 group-hover:text-accent transition leading-snug line-clamp-2">{next.data.title}</p>
+            <p class="mt-1 text-xs text-muted">{next.data.venueShort ?? next.data.venue} · {next.data.year}</p>
+          </a>
+        ) : <span></span>}
+      </nav>
+    </article>
+
+    <!-- Sticky meta sidebar -->
+    <aside class="lg:sticky lg:top-20 self-start space-y-5">
+      <div class="surface p-5">
+        <p class="text-[10px] uppercase tracking-[0.22em] text-muted mb-4">Resources</p>
+        <div class="flex flex-col gap-2">
+          {data.paperUrl && (
+            <a href={data.paperUrl} target="_blank" rel="noopener" class="btn-primary justify-start">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Read full paper
+            </a>
+          )}
+          {data.arxiv && (
+            <a href={`https://arxiv.org/abs/${data.arxiv}`} target="_blank" rel="noopener" class="btn-ghost justify-start">
+              <span class="text-[10px] uppercase tracking-[0.18em] text-muted/70">arXiv</span>
+              <span class="font-mono text-xs">{data.arxiv}</span>
+            </a>
+          )}
+          {data.code && (
+            <a href={data.code} target="_blank" rel="noopener" class="btn-ghost justify-start">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+              Source code
+            </a>
+          )}
+          {data.pdf && (
+            <a href={data.pdf} target="_blank" rel="noopener" class="btn-ghost justify-start">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download PDF
+            </a>
+          )}
+        </div>
+      </div>
+
+      <div class="surface p-5 text-sm">
+        <p class="text-[10px] uppercase tracking-[0.22em] text-muted mb-4">Quick facts</p>
+        <dl class="space-y-3">
+          <div>
+            <dt class="text-[10px] uppercase tracking-[0.18em] text-muted/70">Venue</dt>
+            <dd class="text-fg/90 mt-0.5">{data.venue}</dd>
+          </div>
+          <div>
+            <dt class="text-[10px] uppercase tracking-[0.18em] text-muted/70">Year</dt>
+            <dd class="text-fg/90 mt-0.5 tabular-nums">{data.year}</dd>
+          </div>
+          {data.quartile && (
+            <div>
+              <dt class="text-[10px] uppercase tracking-[0.18em] text-muted/70">Quartile</dt>
+              <dd class="text-fg/90 mt-0.5">{data.quartile}</dd>
+            </div>
+          )}
+          {data.impactFactor && (
+            <div>
+              <dt class="text-[10px] uppercase tracking-[0.18em] text-muted/70">Impact factor</dt>
+              <dd class="text-fg/90 mt-0.5 tabular-nums">{data.impactFactor}</dd>
+            </div>
+          )}
+          <div>
+            <dt class="text-[10px] uppercase tracking-[0.18em] text-muted/70">Authors</dt>
+            <dd class="text-fg/90 mt-0.5">{data.authors.length}</dd>
+          </div>
+        </dl>
+      </div>
+
+    </aside>
+  </div>
+</BaseLayout>

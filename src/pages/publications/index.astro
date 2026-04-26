@@ -1,0 +1,94 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import PublicationRow from '~/components/PublicationRow.astro';
+
+const all = (await getCollection('publications')).sort((a, b) => {
+  if (b.data.year !== a.data.year) return b.data.year - a.data.year;
+  return b.data.order - a.data.order;
+});
+
+const grouped = all.reduce<Record<number, typeof all>>((acc, p) => {
+  (acc[p.data.year] ||= []).push(p);
+  return acc;
+}, {});
+const years = Object.keys(grouped).map(Number).sort((a, b) => b - a);
+
+const totalPapers = all.length;
+const q1Count = all.filter((p) => p.data.quartile === 'Q1').length;
+const maxIF = Math.max(...all.map((p) => p.data.impactFactor ?? 0));
+const firstAuthorCount = all.filter((p) => p.data.authors[0]?.me).length;
+---
+
+<BaseLayout
+  title="Publications"
+  description="Selected publications by Zhiqiang He on reinforcement learning, plasticity, world models, multi-agent RL, and DRL applications."
+>
+  <section class="container-wide pt-24 pb-12">
+    <p class="text-xs uppercase tracking-[0.22em] text-muted">Publications</p>
+    <h1 class="mt-4 text-display-xl font-semibold tracking-tight max-w-[18ch]">
+      Things I've <span class="font-serif italic text-fg/85">written down.</span>
+    </h1>
+    <p class="mt-6 max-w-prose text-lg text-muted">
+      Peer-reviewed papers and preprints, sorted by year. <span class="text-fg">Bold</span> denotes me.
+      <sup class="text-accent">*</sup> denotes corresponding author.
+    </p>
+  </section>
+
+  <section class="container-wide py-8 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 border-y border-border/40">
+    <div>
+      <p class="font-serif italic text-display-md text-fg/95 leading-none">{totalPapers}</p>
+      <p class="mt-2 text-xs uppercase tracking-[0.18em] text-muted">Papers</p>
+    </div>
+    <div>
+      <p class="font-serif italic text-display-md text-fg/95 leading-none">{q1Count}</p>
+      <p class="mt-2 text-xs uppercase tracking-[0.18em] text-muted">Q1 venues</p>
+    </div>
+    <div>
+      <p class="font-serif italic text-display-md text-fg/95 leading-none">{firstAuthorCount}</p>
+      <p class="mt-2 text-xs uppercase tracking-[0.18em] text-muted">First-author</p>
+    </div>
+    <div>
+      <p class="font-serif italic text-display-md text-fg/95 leading-none">{maxIF}</p>
+      <p class="mt-2 text-xs uppercase tracking-[0.18em] text-muted">Highest IF</p>
+    </div>
+  </section>
+
+  <div class="container-wide pt-12 pb-24 grid lg:grid-cols-[160px_minmax(0,1fr)] gap-12">
+    <aside class="hidden lg:block">
+      <nav class="sticky top-20 text-sm">
+        <p class="text-xs uppercase tracking-[0.22em] text-muted mb-4">Years</p>
+        <ul class="space-y-2">
+          {years.map((y) => (
+            <li>
+              <a
+                href={`#y${y}`}
+                class="group flex items-baseline justify-between text-muted hover:text-accent transition"
+              >
+                <span class="font-serif italic text-base">{y}</span>
+                <span class="tabular-nums text-xs text-muted/60 group-hover:text-accent">{grouped[y].length}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </aside>
+
+    <div>
+      {years.map((year) => (
+        <section id={`y${year}`} class="scroll-mt-24 pt-12 first:pt-0">
+          <div class="flex items-baseline gap-4 mb-2">
+            <h2 class="font-serif italic text-display-lg text-fg/90 leading-none">{year}</h2>
+            <span class="text-xs uppercase tracking-[0.18em] text-muted">
+              {grouped[year].length} {grouped[year].length === 1 ? 'paper' : 'papers'}
+            </span>
+            <span class="flex-1 h-px bg-border/40 ml-2"></span>
+          </div>
+          <div class="mt-4">
+            {grouped[year].map((p, i) => <PublicationRow pub={p} index={i} />)}
+          </div>
+        </section>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,183 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const projects = (await getCollection('projects')).sort(
+  (a, b) => b.data.order - a.data.order
+);
+
+const stack = [
+  { label: 'PyTorch', kind: 'framework' },
+  { label: 'JAX', kind: 'framework' },
+  { label: 'TensorFlow', kind: 'framework' },
+  { label: 'CUDA', kind: 'compute' },
+  { label: 'Ray / RLlib', kind: 'distributed' },
+  { label: 'Stable-Baselines3', kind: 'library' },
+  { label: 'Gymnasium', kind: 'env' },
+  { label: 'NumPy / Pandas', kind: 'data' },
+  { label: 'Hydra / Wandb', kind: 'experiment' },
+  { label: 'Linux + Slurm', kind: 'infra' },
+];
+
+const industry = [
+  {
+    period: 'Jun 2022 — May 2023',
+    role: 'RL Algorithms Engineer',
+    company: 'InspirAI',
+    location: 'Hangzhou, China',
+    badge: 'Top-Performing Team',
+    highlight: 'Landlord (Dou Dizhu) AI defeated top-ranked professional players in head-to-head matches.',
+    bullets: [
+      'Built a general-purpose card-game AI SDK deployed across <strong>Sanguosha, Hearthstone, Landlord (Dou Dizhu), and GuanDan</strong> — four production titles.',
+      'On <strong>Landlord (Dou Dizhu)</strong>, the deployed agent reached <em>super-human level</em>, defeating top-ranked professional players in head-to-head matches.',
+      'On <strong>GuanDan</strong>, drove a <strong>+6% win-rate</strong> improvement over the previous production baseline through targeted algorithm optimization.',
+    ],
+  },
+  {
+    period: 'Jun 2021 — Oct 2021',
+    role: 'RL Research Intern',
+    company: 'Baidu',
+    location: 'Beijing, China',
+    badge: 'Super Special Offer',
+    highlight: null,
+    bullets: [
+      'Proposed and implemented <strong>EDA-MAPPO</strong> (Expert-Data-Assisted Multi-Agent PPO).',
+      'Successfully delivered the algorithm into a <strong>client production environment</strong>.',
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="Projects"
+  description="Industry deployments and open-source projects by Zhiqiang He on reinforcement learning, plasticity, adaptive streaming, and multi-agent systems."
+>
+  <!-- Hero -->
+  <section class="container-wide pt-24 pb-12">
+    <p class="text-xs uppercase tracking-[0.22em] text-muted">Projects</p>
+    <h1 class="mt-4 text-display-xl font-semibold tracking-tight max-w-[24ch]">
+      Things I've put <span class="font-serif italic text-fg/85">into the world.</span>
+    </h1>
+    <p class="mt-6 max-w-prose text-lg text-muted leading-relaxed">
+      Production-grade RL systems shipped during industry roles, plus a few
+      open-source utilities and toolkits. Research artefacts tied to specific
+      papers live on the <a href="/publications" class="text-fg hover:text-accent transition">publications page</a>.
+    </p>
+  </section>
+
+  <!-- Industry experience — now lead section -->
+  <section class="container-wide py-16">
+    <p class="text-xs uppercase tracking-[0.22em] text-muted">Industry experience</p>
+    <h2 class="mt-3 text-display-md font-semibold tracking-tight max-w-[24ch]">
+      RL agents I've shipped <span class="font-serif italic text-fg/85">into production.</span>
+    </h2>
+
+    <div class="mt-12 grid lg:grid-cols-2 gap-5">
+      {industry.map((job) => (
+        <article class="surface p-7 flex flex-col">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <p class="text-xs uppercase tracking-[0.18em] text-muted">{job.period}</p>
+            <span class="pill bg-accent/10 ring-accent/30 text-accent">{job.badge}</span>
+          </div>
+          <h3 class="mt-4 text-xl font-semibold tracking-tight">
+            {job.role} <span class="text-muted/70">·</span> <span class="font-serif italic text-fg/80">{job.company}</span>
+          </h3>
+          <p class="mt-1 text-sm text-muted">{job.location}</p>
+          {job.highlight && (
+            <div class="mt-5 rounded-xl bg-gradient-to-br from-accent/15 to-accent/[0.04] ring-1 ring-accent/30 p-4">
+              <p class="text-[10px] uppercase tracking-[0.22em] text-accent mb-1.5 font-medium">Headline result</p>
+              <p class="text-fg leading-snug font-medium">{job.highlight}</p>
+            </div>
+          )}
+          <ul class="mt-5 space-y-2.5 text-sm text-fg/90 leading-relaxed">
+            {job.bullets.map((b) => (
+              <li class="pl-4 border-l border-accent/30" set:html={`— ${b}`}></li>
+            ))}
+          </ul>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- Toolchain -->
+  <section class="container-wide py-16 border-t border-border/40">
+    <p class="text-xs uppercase tracking-[0.22em] text-muted">Toolchain</p>
+    <h2 class="mt-3 text-display-md font-semibold tracking-tight max-w-[20ch]">
+      What I <span class="font-serif italic text-fg/85">build with.</span>
+    </h2>
+    <div class="mt-8 flex flex-wrap gap-2">
+      {stack.map((s) => (
+        <span class="inline-flex items-center gap-2 px-3 h-9 rounded-full ring-1 ring-border bg-bg-elevated/40 text-sm text-fg/85">
+          <span class="text-[10px] uppercase tracking-[0.18em] text-muted/70">{s.kind}</span>
+          <span class="text-muted/40">·</span>
+          {s.label}
+        </span>
+      ))}
+    </div>
+  </section>
+
+  <!-- Open-source utilities -->
+  {projects.length > 0 && (
+    <section class="container-wide py-16 border-t border-border/40">
+      <div class="flex items-end justify-between flex-wrap gap-4 mb-8">
+        <div>
+          <p class="text-xs uppercase tracking-[0.22em] text-muted">Open source</p>
+          <h2 class="mt-3 text-display-md font-semibold tracking-tight">
+            Tools I've <span class="font-serif italic text-fg/85">released.</span>
+          </h2>
+        </div>
+        <a href="https://github.com/Systems-Intelligent-Lab" target="_blank" rel="noopener" class="text-sm text-muted hover:text-accent transition">All on GitHub →</a>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-2 gap-5">
+        {projects.map((p) => (
+          <a
+            href={p.data.repo ?? '#'}
+            target={p.data.repo ? '_blank' : undefined}
+            rel={p.data.repo ? 'noopener' : undefined}
+            class="spotlight surface group p-7 flex flex-col h-64 transition hover:-translate-y-0.5 hover:ring-accent/40"
+          >
+            <div class="flex items-center justify-between">
+              <span class="font-mono text-xs text-accent">{'</>'}</span>
+              <span class="text-[10px] uppercase tracking-[0.2em] text-muted">{p.data.tags[0] ?? 'project'}</span>
+            </div>
+            <h3 class="mt-6 text-2xl font-semibold tracking-tight">{p.data.title}</h3>
+            <p class="mt-2 text-fg/85 text-sm font-serif italic">{p.data.tagline}</p>
+            <p class="mt-3 text-sm text-muted leading-relaxed line-clamp-3">{p.data.description}</p>
+            <div class="mt-auto pt-4 flex items-center justify-between">
+              <div class="flex flex-wrap gap-1.5">
+                {p.data.tags.slice(0, 3).map((t) => (
+                  <span class="pill text-[10px]">{t}</span>
+                ))}
+              </div>
+              <span class="text-muted group-hover:text-accent transition" aria-hidden="true">↗</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Looking ahead -->
+  <section class="container-wide py-20 max-w-3xl border-t border-border/40">
+    <p class="text-xs uppercase tracking-[0.22em] text-muted">Where I'm pushing next</p>
+    <h2 class="mt-3 text-display-md font-semibold tracking-tight">
+      Open directions <span class="font-serif italic text-fg/85">I'd like to chase.</span>
+    </h2>
+    <ul class="mt-10 grid sm:grid-cols-2 gap-x-8 gap-y-4 text-fg/85 text-base leading-relaxed">
+      <li class="flex gap-3"><span class="text-accent shrink-0">◐</span> Reinforcement learning algorithms and theory under continual shift</li>
+      <li class="flex gap-3"><span class="text-accent shrink-0">◇</span> Large-scale and data-efficient RL with deployable cost</li>
+      <li class="flex gap-3"><span class="text-accent shrink-0">◧</span> Stable, robust control for embedded and real-time systems</li>
+      <li class="flex gap-3"><span class="text-accent shrink-0">◢</span> Continual / sustainable learning grounded in world models</li>
+    </ul>
+  </section>
+
+  <script>
+    document.querySelectorAll<HTMLElement>('.spotlight').forEach((el) => {
+      el.addEventListener('mousemove', (e) => {
+        const rect = el.getBoundingClientRect();
+        el.style.setProperty('--mx', `${e.clientX - rect.left}px`);
+        el.style.setProperty('--my', `${e.clientY - rect.top}px`);
+      });
+    });
+  </script>
+</BaseLayout>

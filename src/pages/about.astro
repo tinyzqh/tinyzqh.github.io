@@ -1,0 +1,121 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+
+const education = [
+  { period: '2024 — present', title: 'Ph.D. in Information Science', org: 'University of Electro-Communications (UEC)', city: 'Tokyo, Japan', advisor: 'Prof. Zhi Liu', advisorUrl: 'https://scholar.google.com/citations?user=95oIprAAAAAJ&hl=en' },
+  { period: '2019 — 2022', title: 'M.S. in Control Science and Engineering', org: 'Northeastern University (NEU)', city: 'Shenyang, China', advisor: 'Prof. Jiao Wang', advisorUrl: 'http://faculty.neu.edu.cn/wangjiao/zh_CN/zhym/75393/list/index.htm' },
+  { period: '2015 — 2019', title: 'B.S. in Automation', org: 'East China Jiaotong University (ECJTU)', city: 'Nanchang, China', note: 'Outstanding Graduate (Top 1%)' },
+];
+
+const experience = [
+  { period: '2022 — 2023', role: 'Reinforcement Learning Algorithms Engineer', org: 'InspirAI', city: 'Hangzhou, China', note: 'Built a general-purpose card-game AI SDK across Sanguosha, Hearthstone, Landlord (Dou Dizhu), and GuanDan. The Landlord agent reached super-human level, defeating top-ranked professional players; the GuanDan deployment delivered +6% win rate over baseline. Top-Performing Team Prize.' },
+  { period: '2021', role: 'Reinforcement Learning Research Intern', org: 'Baidu', city: 'Beijing, China', note: 'Proposed and shipped EDA-MAPPO (Expert-Data-Assisted MAPPO) into a client production environment. Super Special Offer.' },
+];
+
+const service = [
+  'Peer reviewer — ACM Multimedia',
+  'Peer reviewer — IEEE Transactions on Network Science and Engineering',
+  'Peer reviewer — IEEE Internet of Things Journal',
+  'Peer reviewer — IEEE Open Journal of the Computer Society',
+];
+
+const awards = [
+  'JST Next-Generation Researcher · ¥2.2M / year, 2025-2027',
+  'Outstanding Graduate (Top 1%), East China Jiaotong University, 2019',
+  'Honorable Mention, Mathematical Contest in Modeling (MCM), 2018',
+  'Third Prize, 15th Challenge Cup, Jiangxi Division, 2017',
+];
+---
+
+<BaseLayout
+  title="About"
+  description="Zhiqiang He (何志强) — Ph.D. researcher at UEC Tokyo. Education, experience, mentors, and academic service."
+  ogType="profile"
+>
+  <section class="container-wide pt-24 pb-12 grid lg:grid-cols-12 gap-10">
+    <div class="lg:col-span-8">
+      <p class="text-xs uppercase tracking-[0.22em] text-muted">About</p>
+      <h1 class="mt-4 text-display-xl font-semibold tracking-tight max-w-[20ch]">
+        Zhiqiang He
+        <span class="font-serif italic text-fg/70 text-display-md align-baseline">/</span>
+        <span lang="zh" class="font-sans not-italic text-fg/80 text-display-md align-baseline">何志强</span>
+      </h1>
+      <p class="mt-6 max-w-prose text-lg text-muted leading-relaxed">
+        I am a Ph.D. researcher in reinforcement learning at the University of Electro-Communications,
+        Tokyo. Before UEC I was a Reinforcement Learning Engineer at <span class="text-fg">InspirAI</span>,
+        an RL research intern at <span class="text-fg">Baidu</span>, and earned my M.S. from
+        <span class="text-fg">Northeastern University</span> and B.S. from
+        <span class="text-fg">East China Jiaotong University</span>.
+      </p>
+      <p class="mt-4 max-w-prose text-lg text-muted leading-relaxed">
+        Outside of papers I write about RL on
+        <a href="https://www.zhihu.com/people/zhiqianghe" class="text-fg hover:text-accent transition" target="_blank" rel="noopener">Zhihu</a>
+        (10K followers) and maintain code at
+        <a href="https://github.com/tinyzqh" class="text-fg hover:text-accent transition" target="_blank" rel="noopener">github.com/tinyzqh</a>.
+      </p>
+    </div>
+    <aside class="lg:col-span-4 lg:justify-self-end">
+      <div class="surface p-4 max-w-xs">
+        <img src="/images/tinyzqh.jpg" alt="Zhiqiang He" class="w-full aspect-square rounded-xl object-cover" />
+        <div class="mt-4 grid grid-cols-2 gap-2 text-xs">
+          <a href="mailto:tinyzqh@gmail.com" class="pill hover:ring-accent/40 transition justify-center">Email</a>
+          <a href="/data/CVZhiqiangHe.pdf" class="pill hover:ring-accent/40 transition justify-center">CV</a>
+          <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=v6o0Dz8AAAAJ" target="_blank" rel="noopener" class="pill hover:ring-accent/40 transition justify-center">Scholar</a>
+          <a href="https://github.com/tinyzqh" target="_blank" rel="noopener" class="pill hover:ring-accent/40 transition justify-center">GitHub</a>
+        </div>
+      </div>
+    </aside>
+  </section>
+
+  <section class="container-wide py-16">
+    <h2 class="text-xs uppercase tracking-[0.22em] text-muted">Education</h2>
+    <ol class="mt-6 grid gap-4 lg:grid-cols-3">
+      {education.map((e) => (
+        <li class="surface p-5">
+          <p class="text-xs uppercase tracking-[0.18em] text-muted">{e.period}</p>
+          <p class="mt-2 text-fg font-medium leading-snug">{e.title}</p>
+          <p class="mt-1 text-sm text-muted">{e.org} · {e.city}</p>
+          {e.advisor && (
+            <p class="mt-3 text-sm">
+              Advised by <a href={e.advisorUrl} target="_blank" rel="noopener" class="text-accent hover:underline">{e.advisor}</a>.
+            </p>
+          )}
+          {e.note && <p class="mt-3 text-sm text-fg/85 italic font-serif">{e.note}</p>}
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="container-wide py-16">
+    <h2 class="text-xs uppercase tracking-[0.22em] text-muted">Experience</h2>
+    <ol class="mt-6 grid gap-4 lg:grid-cols-2">
+      {experience.map((e) => (
+        <li class="surface p-5">
+          <p class="text-xs uppercase tracking-[0.18em] text-muted">{e.period}</p>
+          <p class="mt-2 text-fg font-medium leading-snug">{e.role}</p>
+          <p class="mt-1 text-sm text-muted">{e.org} · {e.city}</p>
+          <p class="mt-3 text-sm text-fg/85 leading-relaxed">{e.note}</p>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="container-wide py-16 grid lg:grid-cols-2 gap-10">
+    <div>
+      <h2 class="text-xs uppercase tracking-[0.22em] text-muted">Awards</h2>
+      <ul class="mt-6 space-y-3">
+        {awards.map((a) => (
+          <li class="text-fg/90 leading-relaxed border-l border-accent/40 pl-4">{a}</li>
+        ))}
+      </ul>
+    </div>
+    <div>
+      <h2 class="text-xs uppercase tracking-[0.22em] text-muted">Service</h2>
+      <ul class="mt-6 space-y-3">
+        {service.map((s) => (
+          <li class="text-fg/90 leading-relaxed border-l border-border pl-4">{s}</li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

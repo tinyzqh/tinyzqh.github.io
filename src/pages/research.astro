@@ -1,0 +1,159 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+const themes = (await getCollection('research-themes')).sort(
+  (a, b) => b.data.order - a.data.order
+);
+const allPubs = await getCollection('publications');
+
+const sectionAnchor = (s) =>
+  s.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+
+const renderedThemes = await Promise.all(
+  themes.map(async (t) => {
+    const { Content } = await render(t);
+    const related = t.data.relatedPapers
+      .map((slug) => allPubs.find((p) => p.id === slug))
+      .filter(Boolean);
+    return {
+      entry: t,
+      Content,
+      related,
+      anchor: sectionAnchor(t.data.title),
+    };
+  })
+);
+
+const totalPapers = allPubs.length;
+const yearsActive = new Date().getFullYear() - Math.min(...allPubs.map((p) => p.data.year)) + 1;
+const distinctVenues = new Set(allPubs.map((p) => p.data.venue)).size;
+const maxIF = Math.max(...allPubs.map((p) => p.data.impactFactor ?? 0));
+---
+
+<BaseLayout
+  title="Research"
+  description="Research themes by Zhiqiang He: plasticity, world models, multi-agent RL, and real-system reinforcement learning."
+>
+  <!-- Hero -->
+  <section class="container-wide pt-24 pb-12">
+    <p class="text-xs uppercase tracking-[0.22em] text-muted">Research</p>
+    <h1 class="mt-4 text-display-xl font-semibold tracking-tight max-w-[20ch]">
+      Four threads, <span class="font-serif italic text-fg/85">one practice.</span>
+    </h1>
+    <p class="mt-6 max-w-prose text-lg text-muted leading-relaxed">
+      My work centers on the parts of reinforcement learning that determine
+      whether an agent will <span class="text-fg">survive deployment</span> —
+      not just whether it works on a benchmark.
+    </p>
+  </section>
+
+  <!-- Stats -->
+  <section class="container-wide py-8 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 border-y border-border/40">
+    <div>
+      <p class="font-serif italic text-display-md text-fg/95 leading-none">{themes.length}</p>
+      <p class="mt-2 text-xs uppercase tracking-[0.18em] text-muted">Active themes</p>
+    </div>
+    <div>
+      <p class="font-serif italic text-display-md text-fg/95 leading-none">{totalPapers}</p>
+      <p class="mt-2 text-xs uppercase tracking-[0.18em] text-muted">Publications</p>
+    </div>
+    <div>
+      <p class="font-serif italic text-display-md text-fg/95 leading-none">{distinctVenues}</p>
+      <p class="mt-2 text-xs uppercase tracking-[0.18em] text-muted">Distinct venues</p>
+    </div>
+    <div>
+      <p class="font-serif italic text-display-md text-fg/95 leading-none">{maxIF}</p>
+      <p class="mt-2 text-xs uppercase tracking-[0.18em] text-muted">Highest IF</p>
+    </div>
+  </section>
+
+  <!-- Theme picker -->
+  <nav class="container-wide flex flex-wrap gap-2 pt-12">
+    {renderedThemes.map((rt, i) => (
+      <a
+        href={`#${rt.anchor}`}
+        class="group inline-flex items-center gap-2 px-3 h-9 rounded-full ring-1 ring-border bg-bg-elevated/40 hover:ring-accent/50 hover:bg-bg-elevated transition text-sm"
+      >
+        <span class="font-mono text-[10px] text-muted/70 tabular-nums">{String(i + 1).padStart(2, '0')}</span>
+        <span class="text-accent" aria-hidden="true">{rt.entry.data.icon}</span>
+        <span class="text-fg/85">{rt.entry.data.title}</span>
+      </a>
+    ))}
+  </nav>
+
+  <!-- Theme sections -->
+  {renderedThemes.map((rt, i) => (
+    <section
+      id={rt.anchor}
+      class="relative container-wide scroll-mt-24 py-20 border-b border-border/40 last:border-b-0"
+    >
+      <!-- Watermark glyph -->
+      <div class="hidden md:block absolute top-12 right-8 text-[18rem] leading-none font-serif text-accent/[0.05] pointer-events-none select-none" aria-hidden="true">
+        {rt.entry.data.icon}
+      </div>
+
+      <div class="grid lg:grid-cols-[80px_minmax(0,1fr)_280px] gap-x-10 gap-y-8 relative">
+        <!-- Number -->
+        <div class="hidden lg:block">
+          <p class="font-mono text-sm text-muted tabular-nums">{String(i + 1).padStart(2, '0')} / {String(themes.length).padStart(2, '0')}</p>
+          <span class="block mt-3 text-3xl text-accent" aria-hidden="true">{rt.entry.data.icon}</span>
+        </div>
+
+        <!-- Body -->
+        <div class="max-w-prose">
+          <p class="text-xs uppercase tracking-[0.22em] text-muted">{rt.entry.data.title}</p>
+          <h2 class="mt-3 text-display-md font-semibold tracking-tight">
+            <span class="font-serif italic text-fg/90">{rt.entry.data.summary}</span>
+          </h2>
+          <div class="mt-8 text-base sm:text-lg text-fg/85 leading-relaxed prose-fg space-y-5">
+            <rt.Content />
+          </div>
+        </div>
+
+        <!-- Related papers card -->
+        {rt.related.length > 0 && (
+          <aside class="lg:col-start-3 lg:row-start-1 lg:row-span-2 self-start">
+            <div class="surface p-5 lg:sticky lg:top-20">
+              <p class="text-[10px] uppercase tracking-[0.22em] text-muted mb-4">Featured papers</p>
+              <ul class="space-y-4">
+                {rt.related.map((p) => (
+                  <li>
+                    <a href={`/publications/${p.id}/`} class="group block">
+                      <p class="text-xs text-muted">
+                        {p.data.venueShort ?? p.data.venue} · {p.data.year}
+                        {p.data.quartile ? ` · ${p.data.quartile}` : ''}
+                      </p>
+                      <p class="mt-1 text-sm text-fg/90 group-hover:text-accent transition leading-snug">
+                        {p.data.title}
+                      </p>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              <a href="/publications" class="mt-5 inline-flex text-xs uppercase tracking-[0.2em] text-muted hover:text-accent transition">
+                All publications →
+              </a>
+            </div>
+          </aside>
+        )}
+      </div>
+    </section>
+  ))}
+
+  <!-- Closing principle -->
+  <section class="container-wide py-24">
+    <div class="max-w-3xl">
+      <p class="text-xs uppercase tracking-[0.22em] text-muted">Through-line</p>
+      <p class="mt-6 text-display-md font-semibold tracking-tight leading-tight">
+        <span class="font-serif italic text-fg/90">Stability beats peak performance.</span>
+        A system that is marginally better but never explodes is the one that ships —
+        and the one that keeps shipping a year later.
+      </p>
+      <div class="mt-10 flex flex-wrap gap-3">
+        <a href="/publications" class="btn-primary">Read the papers →</a>
+        <a href="mailto:tinyzqh@gmail.com" class="btn-ghost">Discuss collaboration</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

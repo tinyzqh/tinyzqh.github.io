@@ -1,0 +1,63 @@
+---
+const stats = [
+  { value: '42.8', label: 'Highest impact factor (IEEE COMST 2025)', suffix: '' },
+  { value: '7', label: 'Q1 papers across IEEE TMM, PR, InfoSci, CTR', suffix: '' },
+  { value: '10', label: 'Followers on Zhihu', suffix: 'K' },
+  { value: '¥2.2M', label: 'JST Next-Generation Researcher (2025-27)', suffix: '' },
+];
+---
+
+<section class="container-wide py-20 sm:py-24 border-y border-border/40">
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10">
+    {stats.map(({ value, label, suffix }) => (
+      <div class="group">
+        <p class="font-serif italic text-display-xl text-fg/95 leading-none">
+          <span class="stat-num" data-target={value}>{value}</span><span>{suffix}</span>
+        </p>
+        <p class="mt-3 text-sm text-muted leading-snug max-w-[20ch]">{label}</p>
+      </div>
+    ))}
+  </div>
+</section>
+
+<script>
+  // Animate numerical stats once on first viewport entry
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const els = document.querySelectorAll<HTMLElement>('.stat-num');
+
+  const animate = (el: HTMLElement) => {
+    const raw = el.dataset.target ?? el.textContent ?? '';
+    // Extract leading currency / sign + numeric value (handles "¥2.2M", "42.8", "10")
+    const match = raw.match(/^([^0-9.-]*)([0-9]*\.?[0-9]+)(.*)$/);
+    if (!match) return;
+    const [, prefix, numStr, rest] = match;
+    const target = parseFloat(numStr);
+    const decimals = (numStr.split('.')[1] || '').length;
+    const duration = 1100;
+    const start = performance.now();
+
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - start) / duration);
+      const eased = 1 - Math.pow(1 - t, 3);
+      const v = (target * eased).toFixed(decimals);
+      el.textContent = `${prefix}${v}${rest}`;
+      if (t < 1) requestAnimationFrame(tick);
+      else el.textContent = `${prefix}${numStr}${rest}`;
+    };
+    requestAnimationFrame(tick);
+  };
+
+  if (reduced) {
+    // no-op, leave original text
+  } else {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          animate(entry.target as HTMLElement);
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    els.forEach((el) => io.observe(el));
+  }
+</script>
