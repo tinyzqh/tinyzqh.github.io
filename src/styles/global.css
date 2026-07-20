@@ -54,9 +54,9 @@
   --fg: 0.97 0 0;
   --muted: 0.65 0.012 260;
   --border: 0.27 0.013 260;
-  --accent: 0.66 0.20 268;
-  --accent-hover: 0.72 0.20 268;
-  --accent-subtle: 0.30 0.10 268;
+  --accent: 0.62 0.12 250;
+  --accent-hover: 0.68 0.12 250;
+  --accent-subtle: 0.30 0.06 250;
 
   color-scheme: dark;
 }
@@ -68,9 +68,9 @@
   --fg: 0.18 0.012 260;
   --muted: 0.45 0.012 260;
   --border: 0.88 0.008 260;
-  --accent: 0.55 0.22 268;
-  --accent-hover: 0.50 0.22 268;
-  --accent-subtle: 0.92 0.04 268;
+  --accent: 0.48 0.13 250;
+  --accent-hover: 0.42 0.13 250;
+  --accent-subtle: 0.93 0.03 250;
 
   color-scheme: light;
 }
@@ -84,10 +84,6 @@
 
   body {
     @apply bg-bg text-fg font-sans antialiased;
-    background-image:
-      radial-gradient(at 8% -10%, oklch(var(--accent) / 0.10) 0px, transparent 50%),
-      radial-gradient(at 95% 105%, oklch(0.55 0.20 220 / 0.08) 0px, transparent 50%);
-    background-attachment: fixed;
   }
 
   ::selection {
@@ -125,40 +121,6 @@
     @apply rounded-2xl bg-bg-elevated/60 ring-1 ring-border backdrop-blur-sm;
   }
 
-  /* Spotlight on hover, follows cursor (cards opt in via this class) */
-  .spotlight {
-    @apply relative overflow-hidden;
-  }
-  .spotlight::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(
-      450px circle at var(--mx, 50%) var(--my, 50%),
-      oklch(var(--accent) / 0.18),
-      transparent 40%
-    );
-    opacity: 0;
-    transition: opacity 0.25s;
-    pointer-events: none;
-  }
-  .spotlight:hover::before { opacity: 1; }
-
-  .gradient-text {
-    background: linear-gradient(
-      135deg,
-      oklch(var(--accent)) 0%,
-      oklch(0.74 0.18 200) 60%,
-      oklch(var(--fg)) 100%
-    );
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-
-  .marquee-mask {
-    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-  }
 }
 
 /* CJK characters lack italic forms — strip the italic transform when used in serif italic context */

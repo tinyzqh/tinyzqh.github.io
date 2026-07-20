@@ -14,7 +14,7 @@ code: "https://github.com/tinyzqh/control-of-jump-systems-based-on-reinforcement
 image: "/images/papers/rlpid.jpg"
 tags: ["control", "deep-rl", "servo"]
 order: 10
-note: "One of the first works applying reinforcement learning to jump speed servo systems. Cited 58 times."
+note: "An early application of reinforcement learning to jump speed servo systems."
 ---
 
 One of the early works applying reinforcement learning to jump speed servo systems.

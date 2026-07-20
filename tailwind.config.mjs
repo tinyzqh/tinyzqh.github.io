@@ -36,15 +36,10 @@ export default {
         glow: '0 0 0 1px oklch(var(--accent) / 0.2), 0 8px 30px -12px oklch(var(--accent) / 0.4)',
       },
       animation: {
-        'marquee': 'marquee 40s linear infinite',
         'fade-in': 'fade-in 0.6s ease-out forwards',
         'fade-up': 'fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards',
       },
       keyframes: {
-        marquee: {
-          from: { transform: 'translateX(0)' },
-          to: { transform: 'translateX(-50%)' },
-        },
         'fade-in': {
           from: { opacity: '0' },
           to: { opacity: '1' },

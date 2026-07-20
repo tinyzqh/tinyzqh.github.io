@@ -59,34 +59,8 @@ const projects = defineCollection({
   }),
 });
 
-const researchThemes = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/research-themes' }),
-  schema: z.object({
-    title: z.string(),
-    icon: z.string().optional(),
-    summary: z.string(),
-    order: z.number().default(0),
-    relatedPapers: z.array(z.string()).default([]),
-  }),
-});
-
-const notes = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/notes' }),
-  schema: z.object({
-    title: z.string(),
-    description: z.string().optional(),
-    date: z.string(),
-    lang: z.enum(['en', 'zh']).default('en'),
-    tags: z.array(z.string()).default([]),
-    cover: z.string().optional(),
-    draft: z.boolean().default(false),
-  }),
-});
-
 export const collections = {
   publications,
   news,
   projects,
-  'research-themes': researchThemes,
-  notes,
 };

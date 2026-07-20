@@ -1,23 +1,172 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
-import Hero from '~/components/Hero.astro';
-import StatStrip from '~/components/StatStrip.astro';
-import Marquee from '~/components/Marquee.astro';
-import Bento from '~/components/Bento.astro';
-import FeaturedPublications from '~/components/FeaturedPublications.astro';
-import Timeline from '~/components/Timeline.astro';
-import Cta from '~/components/Cta.astro';
+import { getCollection } from 'astro:content';
+
+const pubs = (await getCollection('publications')).sort((a, b) => {
+  if (b.data.year !== a.data.year) return b.data.year - a.data.year;
+  return b.data.order - a.data.order;
+});
+
+const news = (await getCollection('news')).sort(
+  (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
+
+const fmtYear = (iso: string) => new Date(iso).getFullYear();
+
+const positions = [
+  { period: '2024 — present', role: 'Ph.D. in Information Science', org: 'University of Electro-Communications, Tokyo', detail: 'Advised by Prof. Zhi Liu.' },
+  { period: '2022 — 2023', role: 'RL Algorithms Engineer', org: 'InspirAI, Hangzhou', detail: 'Built a card-game AI SDK shipped across four production titles; the Landlord agent reached super-human level against top-ranked professional players.' },
+  { period: '2021', role: 'RL Research Intern', org: 'Baidu, Beijing', detail: 'Proposed and shipped EDA-MAPPO into a client production environment.' },
+  { period: '2019 — 2022', role: 'M.S. in Control Science and Engineering', org: 'Northeastern University, Shenyang', detail: 'Advised by Prof. Jiao Wang.' },
+  { period: '2015 — 2019', role: 'B.S. in Automation', org: 'East China Jiaotong University, Nanchang', detail: null },
+];
+
+const service = [
+  'ACM International Conference on Multimedia (ACM MM 2026)',
+  'IEEE Transactions on Multimedia',
+  'IEEE Transactions on Network Science and Engineering',
+  'IEEE Internet of Things Journal',
+  'IEEE Open Journal of the Computer Society',
+];
+
+const links = [
+  { href: '#publications', label: 'Publications' },
+  { href: 'mailto:tinyzqh@gmail.com', label: 'Email' },
+  { href: 'https://scholar.google.com.hk/citations?hl=zh-CN&user=v6o0Dz8AAAAJ', label: 'Google Scholar' },
+  { href: 'https://github.com/tinyzqh', label: 'GitHub' },
+  { href: 'https://www.zhihu.com/people/zhiqianghe', label: 'Zhihu' },
+  { href: '/cv', label: 'CV' },
+];
+
+// Quiet by default, underline emerges on hover — keeps dense link rows calm
+const link =
+  'underline decoration-transparent underline-offset-[3px] transition-colors duration-200 hover:decoration-current';
+const ext = (href: string) =>
+  href.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {};
+
+// Section label sits in the left margin; content owns the right column
+const row = 'grid gap-x-10 gap-y-3 sm:grid-cols-[6.5rem_minmax(0,1fr)]';
+const label =
+  'text-[11px] font-medium uppercase tracking-[0.16em] text-muted/70 sm:pt-1';
 ---
 
 <BaseLayout
   title="Zhiqiang He"
-  description="Personal site of Zhiqiang He (何志强) — Ph.D. researcher at UEC Tokyo. Reinforcement learning, plasticity, world models, and large-scale RL deployment in real systems."
+  description="Zhiqiang He (何志强) — Ph.D. researcher at the University of Electro-Communications, Tokyo, working on reinforcement learning. Publications, experience, awards, and academic service."
 >
-  <Hero />
-  <StatStrip />
-  <Marquee />
-  <Bento />
-  <FeaturedPublications />
-  <Timeline />
-  <Cta />
+  <div class="mx-auto max-w-[52rem] px-6 py-20 sm:py-28">
+    <!-- Identity -->
+    <header class={row}>
+      <div class="sm:pt-1">
+        <img
+          src="/images/tinyzqh.jpg"
+          alt="Zhiqiang He"
+          width="104"
+          height="104"
+          class="h-[4.5rem] w-[4.5rem] rounded-full object-cover"
+          loading="eager"
+        />
+      </div>
+
+      <div>
+        <h1 class="text-[1.75rem] font-semibold leading-tight tracking-[-0.02em] sm:text-[2rem]">
+          Zhiqiang He <span lang="zh" class="font-normal text-muted">何志强</span>
+        </h1>
+
+        <p class="mt-4 max-w-[46ch] text-[1.0625rem] leading-[1.7] text-fg/90">
+          Ph.D. Researcher at the University of Electro-Communications, Tokyo, working on
+          reinforcement learning. Previously an RL engineer at InspirAI and a research
+          intern at Baidu.
+        </p>
+
+        <ul class="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-[0.9375rem] text-muted">
+          {links.map(({ href, label: text }) => (
+            <li><a href={href} class={`${link} hover:text-fg`} {...ext(href)}>{text}</a></li>
+          ))}
+        </ul>
+      </div>
+    </header>
+
+    <!-- Experience -->
+    <section id="experience" class={`${row} mt-24 scroll-mt-16`}>
+      <h2 class={label}>Experience</h2>
+
+      <ol class="space-y-7">
+        {positions.map((pos) => (
+          <li>
+            <p class="text-[0.875rem] tabular-nums text-muted/70">{pos.period}</p>
+            <p class="mt-1 text-[1.0625rem] font-medium leading-snug text-fg">{pos.role}</p>
+            <p class="mt-0.5 text-[0.9375rem] text-muted">{pos.org}</p>
+            {pos.detail && (
+              <p class="mt-1.5 max-w-[52ch] text-[0.9375rem] leading-relaxed text-muted/85">
+                {pos.detail}
+              </p>
+            )}
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <!-- Awards -->
+    <section id="awards" class={`${row} mt-24 scroll-mt-16`}>
+      <h2 class={label}>Awards</h2>
+
+      <ol class="space-y-4">
+        {news.map((n) => (
+          <li class="flex gap-5">
+            <span class="shrink-0 text-[0.9375rem] tabular-nums text-muted/70">
+              {fmtYear(n.data.date)}
+            </span>
+            <span class="text-[0.9375rem] leading-relaxed text-fg/90">{n.data.title}</span>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <!-- Academic service -->
+    <section id="service" class={`${row} mt-24 scroll-mt-16`}>
+      <h2 class={label}>Service</h2>
+
+      <div>
+        <p class="text-[0.9375rem] text-muted/85">Peer reviewer for</p>
+        <ul class="mt-2 space-y-1.5 text-[0.9375rem] leading-relaxed text-fg/90">
+          {service.map((s) => <li>{s}</li>)}
+        </ul>
+      </div>
+    </section>
+
+    <!-- Publications -->
+    <section id="publications" class={`${row} mt-24 scroll-mt-16`}>
+      <h2 class={label}>Publications</h2>
+
+      <ol class="space-y-9">
+        {pubs.map((p) => (
+          <li>
+            <h3 class="text-[1.0625rem] font-medium leading-snug tracking-[-0.01em] text-fg">
+              {p.data.title}
+            </h3>
+
+            <p class="mt-1.5 text-[0.9375rem] leading-relaxed text-muted">
+              {p.data.authors.map((au, i) => (
+                <>
+                  <span class={au.me ? 'font-semibold text-fg/90' : ''}>{au.name}</span>{au.corresponding && <sup>*</sup>}{i < p.data.authors.length - 1 ? ', ' : ''}
+                </>
+              ))}
+            </p>
+
+            <p class="mt-1 text-[0.9375rem] text-muted/85">
+              <span class="text-fg/70">{p.data.venue}</span><span class="tabular-nums">, {p.data.year}</span>{p.data.impactFactor && <span class="tabular-nums"> · IF {p.data.impactFactor}</span>}{p.data.quartile && <span> · JCR {p.data.quartile}</span>}
+            </p>
+
+            <p class="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-[0.875rem] text-muted/70">
+              {p.data.paperUrl && <a href={p.data.paperUrl} class={`${link} hover:text-fg`} target="_blank" rel="noopener">Paper</a>}
+              {p.data.arxiv && <a href={`https://arxiv.org/abs/${p.data.arxiv}`} class={`${link} hover:text-fg`} target="_blank" rel="noopener">arXiv</a>}
+              {p.data.pdf && <a href={p.data.pdf} class={`${link} hover:text-fg`} target="_blank" rel="noopener">PDF</a>}
+              {p.data.code && <a href={p.data.code} class={`${link} hover:text-fg`} target="_blank" rel="noopener">Code</a>}
+            </p>
+          </li>
+        ))}
+      </ol>
+    </section>
+  </div>
 </BaseLayout>

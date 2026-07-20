@@ -7,41 +7,28 @@ const pubs = (await getCollection('publications')).sort((a, b) => {
   return b.data.order - a.data.order;
 });
 
-const sections = [
-  { id: 'profile', label: 'Profile' },
-  { id: 'education', label: 'Education' },
-  { id: 'experience', label: 'Experience' },
-  { id: 'publications', label: 'Publications' },
-  { id: 'awards', label: 'Awards' },
-  { id: 'service', label: 'Service' },
-];
 ---
 
 <BaseLayout
   title="CV"
   description="Curriculum vitae of Zhiqiang He — Ph.D. researcher at UEC Tokyo, working on reinforcement learning."
 >
-  <div class="container-wide pt-20 pb-24 grid lg:grid-cols-[200px_minmax(0,1fr)] gap-12">
-    <aside class="hidden lg:block">
-      <nav class="sticky top-20 text-sm">
-        <p class="text-xs uppercase tracking-[0.22em] text-muted mb-3">CV</p>
-        <ul class="space-y-1.5">
-          {sections.map((s) => (
-            <li>
-              <a href={`#${s.id}`} class="text-muted hover:text-accent transition">{s.label}</a>
-            </li>
-          ))}
-        </ul>
-        <a href="/data/CVZhiqiangHe.pdf" class="btn-ghost mt-8 w-full justify-center" target="_blank" rel="noopener">
-          Download PDF
-        </a>
-      </nav>
-    </aside>
+  <div class="container-prose pb-20 pt-12">
+    <p class="mb-10 text-sm">
+      <a
+        href="/data/CVZhiqiangHe.pdf"
+        target="_blank"
+        rel="noopener"
+        class="text-muted underline decoration-border underline-offset-4 transition hover:text-fg hover:decoration-fg/40"
+      >
+        Download PDF
+      </a>
+    </p>
 
     <article class="max-w-prose space-y-14">
       <header id="profile" class="scroll-mt-24">
         <p class="text-xs uppercase tracking-[0.22em] text-muted">Curriculum Vitae</p>
-        <h1 class="mt-3 text-display-lg font-semibold tracking-tight">Zhiqiang He · 何志强</h1>
+        <h1 class="mt-3 text-display-md font-semibold tracking-tight">Zhiqiang He · 何志强</h1>
         <p class="mt-4 text-muted">
           Ph.D. researcher · University of Electro-Communications, Tokyo
         </p>
@@ -52,10 +39,11 @@ const sections = [
           <a href="https://www.zhihu.com/people/zhiqianghe" target="_blank" rel="noopener" class="hover:text-accent transition">Zhihu</a>
         </p>
         <p class="mt-6 text-fg/85 leading-relaxed">
-          Reinforcement learning researcher with seven Q1 publications across IEEE TMM,
-          IEEE Communications Surveys & Tutorials, Pattern Recognition, Information Sciences,
-          and Communications in Transportation Research. Industry experience at
-          Baidu and InspirAI shipping RL agents into production.
+          Reinforcement learning researcher working on plasticity, world models, and
+          multi-agent RL, with publications in IEEE TMM, IEEE Communications Surveys &
+          Tutorials, Pattern Recognition, Information Sciences, and Communications in
+          Transportation Research. Industry experience at Baidu and InspirAI shipping
+          RL agents into production.
         </p>
       </header>
 
@@ -124,9 +112,18 @@ const sections = [
             <li class="grid sm:grid-cols-[28px_1fr] gap-3">
               <span class="text-muted/60 tabular-nums">{String(i + 1).padStart(2, '0')}</span>
               <div>
-                <a href={`/publications/${p.id}/`} class="text-fg hover:text-accent transition leading-snug">
-                  {p.data.title}
-                </a>
+                {p.data.paperUrl || p.data.arxiv ? (
+                  <a
+                    href={p.data.paperUrl ?? `https://arxiv.org/abs/${p.data.arxiv}`}
+                    target="_blank"
+                    rel="noopener"
+                    class="leading-snug text-fg transition hover:text-accent"
+                  >
+                    {p.data.title}
+                  </a>
+                ) : (
+                  <span class="leading-snug text-fg">{p.data.title}</span>
+                )}
                 <p class="mt-1 text-muted">
                   {p.data.authors.map((a, idx) => (
                     <>
@@ -134,10 +131,8 @@ const sections = [
                     </>
                   ))}
                 </p>
-                <p class="mt-1 text-muted/80 italic">
-                  {p.data.venue} · {p.data.year}
-                  {p.data.impactFactor && <span> · IF {p.data.impactFactor}</span>}
-                  {p.data.quartile && <span> · {p.data.quartile}</span>}
+                <p class="mt-1 text-muted">
+                  <em class="not-italic text-fg/70">{p.data.venue}</em><span class="tabular-nums">, {p.data.year}</span>{p.data.impactFactor && <span class="tabular-nums"> · IF {p.data.impactFactor}</span>}{p.data.quartile && <span> · JCR {p.data.quartile}</span>}
                 </p>
               </div>
             </li>
@@ -157,12 +152,13 @@ const sections = [
 
       <section id="service" class="scroll-mt-24">
         <h2 class="text-xs uppercase tracking-[0.22em] text-muted">Service</h2>
-        <p class="mt-4 text-muted">Peer reviewer for:</p>
+        <p class="mt-4 text-muted">Peer reviewer for</p>
         <ul class="mt-3 space-y-1.5 text-fg/90">
-          <li>— ACM International Conference on Multimedia (ACM MM 2026)</li>
-          <li>— IEEE Transactions on Network Science and Engineering</li>
-          <li>— IEEE Internet of Things Journal</li>
-          <li>— IEEE Open Journal of the Computer Society</li>
+          <li>ACM International Conference on Multimedia (ACM MM 2026)</li>
+          <li>IEEE Transactions on Multimedia</li>
+          <li>IEEE Transactions on Network Science and Engineering</li>
+          <li>IEEE Internet of Things Journal</li>
+          <li>IEEE Open Journal of the Computer Society</li>
         </ul>
       </section>
 
