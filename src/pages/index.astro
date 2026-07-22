@@ -31,7 +31,7 @@ const statusLabel: Record<string, string> = {
 
 const experience = [
   {
-    period: '2022 — 2023', role: 'RL Algorithms Engineer', org: 'InspirAI, Hangzhou',
+    period: '2022 — 2023', role: 'RL Algorithms Engineer', org: 'InspirAI, Hangzhou', honor: 'Top Performance Team',
     detail: 'Built a card-game AI SDK shipped across four production titles; the Landlord agent reached super-human level against top-ranked professional players. A similar (independently developed) approach also powered a Guandan agent, improving its win rate by 6%.',
     video: 'https://www.bilibili.com/video/BV19o4y1s7Kf/',
     code: null,
@@ -42,7 +42,7 @@ const experience = [
     ],
   },
   {
-    period: '2021', role: 'RL Research Intern', org: 'Baidu, Beijing',
+    period: '2021', role: 'RL Research Intern', org: 'Baidu, Beijing', honor: 'Super Special Offer',
     detail: 'Single-handedly developed EDA-MAPPO — the full algorithm and its performance gains — and shipped it into a client production environment.',
     video: 'https://www.bilibili.com/video/BV1LV411p7KD/',
     code: 'https://github.com/tinyzqh/light_mappo',
@@ -134,7 +134,7 @@ const label =
         {experience.map((pos) => (
           <li>
             <p class="text-[0.875rem] tabular-nums text-muted/70">{pos.period}</p>
-            <p class="mt-1 text-[1.0625rem] font-medium leading-snug text-fg">{pos.role}</p>
+            <p class="mt-1 text-[1.0625rem] font-medium leading-snug text-fg">{pos.role}{pos.honor && <span class="ml-2 whitespace-nowrap rounded-full border border-accent/30 px-2 py-px align-[0.1em] text-[0.6875rem] font-medium uppercase tracking-[0.06em] text-accent/90">{pos.honor}</span>}</p>
             <p class="mt-0.5 text-[0.9375rem] text-muted">{pos.org}</p>
             {pos.detail && (
               <p class="mt-1.5 max-w-[52ch] text-justify hyphens-auto text-[0.9375rem] leading-relaxed text-muted/85">
