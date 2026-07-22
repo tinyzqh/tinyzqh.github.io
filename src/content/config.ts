@@ -22,6 +22,7 @@ const publications = defineCollection({
     arxiv: z.string().optional(),
     doi: z.string().optional(),
     paperUrl: z.string().url().optional(),
+    project: z.string().url().optional(),
     code: z.string().url().optional(),
     pdf: z.string().optional(),
     image: z.string().optional(),
@@ -38,6 +39,9 @@ const news = defineCollection({
   schema: z.object({
     date: z.string(),
     title: z.string(),
+    // Optional label shown in the leading column (e.g. a range "2025–2027");
+    // falls back to the date's year.
+    period: z.string().optional(),
     icon: z.string().optional(),
     href: z.string().optional(),
   }),

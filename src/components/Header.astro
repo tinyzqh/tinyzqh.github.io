@@ -3,19 +3,28 @@ import ThemeToggle from '~/components/ThemeToggle.astro';
 
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const isHome = path === '/';
+
+// In-page anchors surfaced in the sticky header on the home page.
+const nav = [
+  { href: '#experience', label: 'Experience' },
+  { href: '#publications', label: 'Publications' },
+  { href: '/cv', label: 'CV' },
+];
+
+const navLink =
+  'text-[0.875rem] text-muted underline decoration-transparent underline-offset-[3px] transition-colors hover:text-fg hover:decoration-current';
 ---
 
-<header>
+<header class="sticky top-0 z-40 border-b border-border/40 bg-bg/75 backdrop-blur-md">
   <div class="mx-auto flex h-14 max-w-[52rem] items-center justify-between px-6">
     {isHome ? (
-      <span></span>
+      <nav class="flex gap-x-5 sm:gap-x-6">
+        {nav.map(({ href, label }) => (
+          <a href={href} class={navLink}>{label}</a>
+        ))}
+      </nav>
     ) : (
-      <a
-        href="/"
-        class="text-[0.9375rem] text-muted underline decoration-transparent underline-offset-[3px] transition-colors hover:text-fg hover:decoration-current"
-      >
-        ← Zhiqiang He
-      </a>
+      <a href="/" class={navLink}>← Zhiqiang He</a>
     )}
     <ThemeToggle />
   </div>

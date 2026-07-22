@@ -13,12 +13,31 @@ const news = (await getCollection('news')).sort(
 
 const fmtYear = (iso: string) => new Date(iso).getFullYear();
 
-const positions = [
-  { period: '2024 — present', role: 'Ph.D. in Information Science', org: 'University of Electro-Communications, Tokyo', detail: 'Advised by Prof. Zhi Liu.' },
+// Group publications by year so the list gets a faint divider per year.
+// pubs is already sorted year-descending, so consecutive grouping is enough.
+const pubsByYear: { year: number; items: typeof pubs }[] = [];
+for (const p of pubs) {
+  const g = pubsByYear.at(-1);
+  if (g && g.year === p.data.year) g.items.push(p);
+  else pubsByYear.push({ year: p.data.year, items: [p] });
+}
+
+// Shown as a faint tag next to the venue; published work needs no tag.
+const statusLabel: Record<string, string> = {
+  preprint: 'Preprint',
+  'under-review': 'Under review',
+  accepted: 'Accepted',
+};
+
+const experience = [
   { period: '2022 — 2023', role: 'RL Algorithms Engineer', org: 'InspirAI, Hangzhou', detail: 'Built a card-game AI SDK shipped across four production titles; the Landlord agent reached super-human level against top-ranked professional players.' },
   { period: '2021', role: 'RL Research Intern', org: 'Baidu, Beijing', detail: 'Proposed and shipped EDA-MAPPO into a client production environment.' },
-  { period: '2019 — 2022', role: 'M.S. in Control Science and Engineering', org: 'Northeastern University, Shenyang', detail: 'Advised by Prof. Jiao Wang.' },
-  { period: '2015 — 2019', role: 'B.S. in Automation', org: 'East China Jiaotong University, Nanchang', detail: null },
+];
+
+const education = [
+  { period: '2024 —', degree: 'Ph.D. in Information Science', org: 'University of Electro-Communications, Tokyo', advisor: 'Prof. Zhi Liu' },
+  { period: '2019 — 2022', degree: 'M.S. in Control Science and Engineering', org: 'Northeastern University, Shenyang', advisor: 'Prof. Jiao Wang' },
+  { period: '2015 — 2019', degree: 'B.S. in Automation', org: 'East China Jiaotong University, Nanchang', advisor: null },
 ];
 
 const service = [
@@ -92,7 +111,7 @@ const label =
       <h2 class={label}>Experience</h2>
 
       <ol class="space-y-7">
-        {positions.map((pos) => (
+        {experience.map((pos) => (
           <li>
             <p class="text-[0.875rem] tabular-nums text-muted/70">{pos.period}</p>
             <p class="mt-1 text-[1.0625rem] font-medium leading-snug text-fg">{pos.role}</p>
@@ -107,6 +126,22 @@ const label =
       </ol>
     </section>
 
+    <!-- Education -->
+    <section id="education" class={`${row} mt-24 scroll-mt-16`}>
+      <h2 class={label}>Education</h2>
+
+      <ol class="space-y-4">
+        {education.map((e) => (
+          <li class="flex flex-col gap-x-5 sm:flex-row">
+            <span class="shrink-0 text-[0.9375rem] tabular-nums text-muted/70 sm:w-[6rem]">{e.period}</span>
+            <span class="text-[0.9375rem] leading-relaxed text-fg/90">
+              {e.degree}<span class="text-muted"> · {e.org}</span>{e.advisor && <span class="text-muted/65"> · {e.advisor}</span>}
+            </span>
+          </li>
+        ))}
+      </ol>
+    </section>
+
     <!-- Awards -->
     <section id="awards" class={`${row} mt-24 scroll-mt-16`}>
       <h2 class={label}>Awards</h2>
@@ -115,7 +150,7 @@ const label =
         {news.map((n) => (
           <li class="flex gap-5">
             <span class="shrink-0 text-[0.9375rem] tabular-nums text-muted/70">
-              {fmtYear(n.data.date)}
+              {n.data.period ?? fmtYear(n.data.date)}
             </span>
             <span class="text-[0.9375rem] leading-relaxed text-fg/90">{n.data.title}</span>
           </li>
@@ -137,36 +172,70 @@ const label =
 
     <!-- Publications -->
     <section id="publications" class={`${row} mt-24 scroll-mt-16`}>
-      <h2 class={label}>Publications</h2>
+      <div>
+        <h2 class={label}>Publications</h2>
+        <div class="mt-2.5 hidden flex-col gap-1 text-[0.6875rem] text-muted/50 sm:flex">
+          <span class="flex items-center gap-1.5">
+            <span class="h-1.5 w-1.5 shrink-0 rounded-full bg-accent/70"></span> first author
+          </span>
+          <span class="flex items-center gap-1.5">
+            <span class="h-1.5 w-1.5 shrink-0 rounded-full bg-accent2/80"></span> corresponding author
+          </span>
+        </div>
+      </div>
 
-      <ol class="space-y-9">
-        {pubs.map((p) => (
-          <li>
-            <h3 class="text-[1.0625rem] font-medium leading-snug tracking-[-0.01em] text-fg">
-              {p.data.title}
-            </h3>
+      <div class="space-y-10">
+        {pubsByYear.map((grp) => (
+          <div>
+            <div class="mb-6 flex items-center gap-4">
+              <span class="text-[0.8125rem] font-medium tabular-nums text-muted/55">{grp.year}</span>
+              <span class="h-px flex-1 bg-border/40"></span>
+            </div>
 
-            <p class="mt-1.5 text-[0.9375rem] leading-relaxed text-muted">
-              {p.data.authors.map((au, i) => (
-                <>
-                  <span class={au.me ? 'font-semibold text-fg/90' : ''}>{au.name}</span>{au.corresponding && <sup>*</sup>}{i < p.data.authors.length - 1 ? ', ' : ''}
-                </>
-              ))}
-            </p>
+            <ol class="space-y-9">
+              {grp.items.map((p) => {
+                // Mark papers I led — blue dot for first author, teal dot for corresponding.
+                const isFirst = p.data.authors[0]?.me === true;
+                const isCorr = p.data.authors.some((au) => au.me && au.corresponding);
+                const dotBase =
+                  'relative before:absolute before:-left-[1.125rem] before:top-[0.55em] before:h-1.5 before:w-1.5 before:rounded-full';
+                const marker = isFirst
+                  ? `${dotBase} before:bg-accent/70`
+                  : isCorr
+                  ? `${dotBase} before:bg-accent2/80`
+                  : '';
+                return (
+                <li class={marker}>
+                  <h3 class="text-[1.0625rem] font-medium leading-snug tracking-[-0.01em] text-fg">
+                    {p.data.title}
+                  </h3>
 
-            <p class="mt-1 text-[0.9375rem] text-muted/85">
-              <span class="text-fg/70">{p.data.venue}</span><span class="tabular-nums">, {p.data.year}</span>{p.data.impactFactor && <span class="tabular-nums"> · IF {p.data.impactFactor}</span>}{p.data.quartile && <span> · JCR {p.data.quartile}</span>}
-            </p>
+                  <p class="mt-1.5 text-[0.9375rem] leading-relaxed text-muted">
+                    {p.data.authors.map((au, i) => (
+                      <>
+                        <span class={au.me ? 'font-semibold text-fg/90' : ''}>{au.name}</span>{au.corresponding && <sup>*</sup>}{i < p.data.authors.length - 1 ? ', ' : ''}
+                      </>
+                    ))}
+                  </p>
 
-            <p class="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-[0.875rem] text-muted/70">
-              {p.data.paperUrl && <a href={p.data.paperUrl} class={`${link} hover:text-fg`} target="_blank" rel="noopener">Paper</a>}
-              {p.data.arxiv && <a href={`https://arxiv.org/abs/${p.data.arxiv}`} class={`${link} hover:text-fg`} target="_blank" rel="noopener">arXiv</a>}
-              {p.data.pdf && <a href={p.data.pdf} class={`${link} hover:text-fg`} target="_blank" rel="noopener">PDF</a>}
-              {p.data.code && <a href={p.data.code} class={`${link} hover:text-fg`} target="_blank" rel="noopener">Code</a>}
-            </p>
-          </li>
+                  <p class="mt-1 text-[0.9375rem] text-muted/85">
+                    <span class="text-fg/70">{p.data.venue}</span><span class="tabular-nums">, {p.data.year}</span>{p.data.impactFactor && <span class="tabular-nums"> · IF {p.data.impactFactor}</span>}{p.data.quartile && <span> · JCR {p.data.quartile}</span>}{statusLabel[p.data.status] && <span class="ml-2 rounded-full border border-border/60 px-2 py-px text-[0.6875rem] font-medium uppercase tracking-[0.06em] text-muted/70 align-[0.08em]">{statusLabel[p.data.status]}</span>}
+                  </p>
+
+                  <p class="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-[0.875rem] text-muted/70">
+                    {p.data.paperUrl && <a href={p.data.paperUrl} class={`${link} hover:text-fg`} target="_blank" rel="noopener">Paper</a>}
+                    {p.data.arxiv && <a href={`https://arxiv.org/abs/${p.data.arxiv}`} class={`${link} hover:text-fg`} target="_blank" rel="noopener">arXiv</a>}
+                    {p.data.project && <a href={p.data.project} class={`${link} hover:text-fg`} target="_blank" rel="noopener">Project</a>}
+                    {p.data.pdf && <a href={p.data.pdf} class={`${link} hover:text-fg`} target="_blank" rel="noopener">PDF</a>}
+                    {p.data.code && <a href={p.data.code} class={`${link} hover:text-fg`} target="_blank" rel="noopener">Code</a>}
+                  </p>
+                </li>
+                );
+              })}
+            </ol>
+          </div>
         ))}
-      </ol>
+      </div>
     </section>
   </div>
 </BaseLayout>

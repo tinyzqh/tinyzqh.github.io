@@ -16,11 +16,12 @@ export default {
           hover: 'oklch(var(--accent-hover) / <alpha-value>)',
           subtle: 'oklch(var(--accent-subtle) / <alpha-value>)',
         },
+        accent2: 'oklch(var(--accent-2) / <alpha-value>)',
       },
       fontFamily: {
         sans: ['Geist', 'Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', '"Noto Sans SC"', '"PingFang SC"', '"Hiragino Sans GB"', '"Microsoft YaHei"', '"WenQuanYi Micro Hei"', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
-        serif: ['"Instrument Serif"', 'ui-serif', 'Georgia', '"Noto Sans SC"', '"Songti SC"', '"PingFang SC"', 'serif'],
-        mono: ['"Geist Mono"', 'ui-monospace', '"JetBrains Mono"', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+        serif: ['ui-serif', 'Georgia', '"Songti SC"', '"PingFang SC"', 'serif'],
+        mono: ['ui-monospace', '"JetBrains Mono"', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
       },
       fontSize: {
         'display-2xl': ['clamp(3.5rem, 9vw, 7.5rem)', { lineHeight: '0.95', letterSpacing: '-0.04em' }],
