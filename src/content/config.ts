@@ -19,6 +19,7 @@ const publications = defineCollection({
     status: z.enum(['accepted', 'published', 'preprint', 'under-review']),
     impactFactor: z.number().optional(),
     quartile: z.enum(['Q1', 'Q2', 'Q3', 'Q4']).optional(),
+    ccf: z.enum(['A', 'B', 'C']).optional(),
     arxiv: z.string().optional(),
     doi: z.string().optional(),
     paperUrl: z.string().url().optional(),
