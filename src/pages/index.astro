@@ -13,13 +13,20 @@ const news = (await getCollection('news')).sort(
 
 const fmtYear = (iso: string) => new Date(iso).getFullYear();
 
-// Group publications by year so the list gets a faint divider per year.
-// pubs is already sorted year-descending, so consecutive grouping is enough.
-const pubsByYear: { year: number; items: typeof pubs }[] = [];
-for (const p of pubs) {
-  const g = pubsByYear.at(-1);
-  if (g && g.year === p.data.year) g.items.push(p);
-  else pubsByYear.push({ year: p.data.year, items: [p] });
+// Papers I led (first or corresponding author) get their own group at the top;
+// the rest fall into year groups. pubs is already sorted year-descending.
+const isLead = (p: (typeof pubs)[number]) =>
+  p.data.authors[0]?.me === true || p.data.authors.some((au) => au.me && au.corresponding);
+
+const leadPubs = pubs.filter(isLead);
+const otherPubs = pubs.filter((p) => !isLead(p));
+
+const pubGroups: { label: string; items: typeof pubs }[] = [];
+if (leadPubs.length) pubGroups.push({ label: 'First / corresponding author', items: leadPubs });
+for (const p of otherPubs) {
+  const g = pubGroups.at(-1);
+  if (g && g.label === String(p.data.year)) g.items.push(p);
+  else pubGroups.push({ label: String(p.data.year), items: [p] });
 }
 
 // Shown as a faint tag next to the venue; published work needs no tag.
@@ -248,10 +255,10 @@ const label =
       </div>
 
       <div class="space-y-10">
-        {pubsByYear.map((grp) => (
+        {pubGroups.map((grp) => (
           <div>
             <div class="mb-6 flex items-center gap-4">
-              <span class="text-[0.8125rem] font-medium tabular-nums text-muted/55">{grp.year}</span>
+              <span class="text-[0.8125rem] font-medium tabular-nums text-muted/55">{grp.label}</span>
               <span class="h-px flex-1 bg-border/40"></span>
             </div>
 
