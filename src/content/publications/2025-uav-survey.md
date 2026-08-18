@@ -16,6 +16,8 @@ status: "published"
 impactFactor: 42.8
 quartile: "Q1"
 paperUrl: "https://ieeexplore.ieee.org/document/11047530"
+arxiv: "2502.12875"
+pdf: "https://arxiv.org/pdf/2502.12875"
 image: "/images/papers/uavsurvey.png"
 tags: ["survey", "drl", "uav", "networking"]
 selected: true

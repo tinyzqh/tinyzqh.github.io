@@ -13,6 +13,7 @@ ccf: "A"
 arxiv: "2504.09906"
 paperUrl: "https://ieeexplore.ieee.org/document/11498444"
 code: "https://github.com/tinyzqh/PA-MoE"
+pdf: "https://arxiv.org/pdf/2504.09906"
 image: "/images/papers/pamoe.png"
 tags: ["plasticity", "moe", "video-streaming"]
 selected: true

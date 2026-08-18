@@ -14,6 +14,8 @@ quartile: "Q1"
 doi: "10.1109/JIOT.2026.3696834"
 arxiv: "2604.09028"
 paperUrl: "https://ieeexplore.ieee.org/document/11535056"
+pdf: "https://arxiv.org/pdf/2604.09028"
+image: "/images/papers/pemoe.jpg"
 tags: ["plasticity", "multi-agent-rl", "uav", "moe"]
 order: 85
 abstract: "PE-MAMoE builds on multi-agent PPO, giving each UAV a sparsely gated mixture-of-experts actor whose router selects one specialist per step, with a non-parametric phase controller that perturbs and re-tunes parameters to keep the policy adaptable as user mobility and traffic demands shift."

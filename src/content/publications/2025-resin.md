@@ -9,6 +9,8 @@ year: 2025
 status: "preprint"
 arxiv: "2505.01584"
 paperUrl: "https://arxiv.org/abs/2505.01584"
+pdf: "https://arxiv.org/pdf/2505.01584"
+image: "/images/papers/resin.jpg"
 tags: ["plasticity", "video-streaming", "deep-rl"]
 order: 85
 abstract: "Real-world network bandwidth is heterogeneous relative to training conditions. We show that neural networks suffer plasticity loss under this shift, characterize it through silent neurons, and propose Reset Silent Neuron (ReSiN) to preserve adaptability."

@@ -11,6 +11,7 @@ year: 2018
 status: "published"
 paperUrl: "https://www.mdpi.com/1999-4893/11/5/65"
 code: "https://github.com/tinyzqh/control-of-jump-systems-based-on-reinforcement-learning"
+pdf: "https://www.mdpi.com/1999-4893/11/5/65/pdf"
 image: "/images/papers/rlpid.jpg"
 tags: ["control", "deep-rl", "servo"]
 order: 10
