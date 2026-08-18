@@ -8,6 +8,7 @@ const isHome = path === '/';
 const nav = [
   { href: '#experience', label: 'Experience' },
   { href: '#publications', label: 'Publications' },
+  { href: '/resources', label: 'Resources' },
   { href: '/cv', label: 'CV' },
 ];
 
@@ -16,7 +17,7 @@ const navLink =
 ---
 
 <header class="sticky top-0 z-40 border-b border-border/40 bg-bg/75 backdrop-blur-md">
-  <div class="mx-auto flex h-14 max-w-[52rem] items-center justify-between px-6">
+  <div class="mx-auto flex h-14 max-w-[68rem] items-center justify-between px-6">
     {isHome ? (
       <nav class="flex gap-x-5 sm:gap-x-6">
         {nav.map(({ href, label }) => (

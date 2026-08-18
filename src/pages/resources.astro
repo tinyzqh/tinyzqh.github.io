@@ -1,0 +1,73 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+
+// Material I keep public for students and collaborators to reuse
+const resources = [
+  {
+    title: 'Rebuttal letters — IEEE TMM (PA-MoE)',
+    meta: 'Plasticity-Aware Mixture of Experts, IEEE Transactions on Multimedia, 2026',
+    detail:
+      'The complete response-to-reviewers letters from both revision rounds, shared as a worked example of how to answer a review: point-by-point replies, what changed in the manuscript, and how to push back on a comment without picking a fight.',
+    files: [
+      { href: '/papers/pamoe-tmm-rebuttal-r1.pdf', label: 'Round 1' },
+      { href: '/papers/pamoe-tmm-rebuttal-r2.pdf', label: 'Round 2' },
+    ],
+    related: { href: 'https://ieeexplore.ieee.org/document/11498444', label: 'Paper' },
+  },
+];
+
+const link =
+  'underline decoration-transparent underline-offset-[3px] transition-colors duration-200 hover:decoration-current';
+const row = 'grid gap-x-10 gap-y-3 sm:grid-cols-[6.5rem_minmax(0,1fr)]';
+const label =
+  'text-[11px] font-medium uppercase tracking-[0.16em] text-muted/70 sm:pt-1';
+---
+
+<BaseLayout
+  title="Resources"
+  description="Materials Zhiqiang He keeps public for students and collaborators — rebuttal letters and other worked examples from the publishing process."
+>
+  <div class="mx-auto max-w-[68rem] px-6 py-20 sm:py-28">
+    <header class={row}>
+      <h2 class={label}>Resources</h2>
+
+      <div>
+        <h1 class="text-[1.75rem] font-semibold leading-tight tracking-[-0.02em] sm:text-[2rem]">
+          Resources
+        </h1>
+
+        <p class="mt-4 max-w-[72ch] text-[1.0625rem] leading-[1.7] text-fg/90">
+          Material from my own papers that I keep public so students and collaborators can
+          see how the process actually looks from the inside, not just the polished result.
+        </p>
+      </div>
+    </header>
+
+    <section class={`${row} mt-16`}>
+      <h2 class={label}>Peer review</h2>
+
+      <ol class="space-y-9">
+        {resources.map((r) => (
+          <li>
+            <h3 class="text-[1.0625rem] font-medium leading-snug tracking-[-0.01em]">{r.title}</h3>
+
+            <p class="mt-1 text-[0.9375rem] text-muted/85">{r.meta}</p>
+
+            <p class="mt-2 max-w-[82ch] text-[0.9375rem] leading-relaxed text-muted">
+              {r.detail}
+            </p>
+
+            <p class="mt-2.5 flex flex-wrap gap-x-5 gap-y-1 text-[0.875rem] text-muted/70">
+              {r.files.map((f) => (
+                <a href={f.href} class={`${link} hover:text-fg`} target="_blank" rel="noopener">{f.label}</a>
+              ))}
+              {r.related && (
+                <a href={r.related.href} class={`${link} hover:text-fg`} target="_blank" rel="noopener">{r.related.label}</a>
+              )}
+            </p>
+          </li>
+        ))}
+      </ol>
+    </section>
+  </div>
+</BaseLayout>
