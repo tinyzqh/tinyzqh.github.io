@@ -127,7 +127,7 @@ const pubs = (await getCollection('publications')).sort((a, b) => {
                 <p class="mt-1 text-muted">
                   {p.data.authors.map((a, idx) => (
                     <>
-                      <span class={a.me ? 'text-fg' : ''}>{a.name}</span>{a.corresponding && <sup class="text-accent">*</sup>}{idx < p.data.authors.length - 1 ? ', ' : ''}
+                      <span class={a.me ? 'text-fg underline decoration-fg/45 underline-offset-[3px]' : ''}>{a.name}</span>{a.corresponding && <sup class="text-accent">*</sup>}{idx < p.data.authors.length - 1 ? ', ' : ''}
                     </>
                   ))}
                 </p>
