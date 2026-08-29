@@ -10,6 +10,7 @@ status: "accepted"
 impactFactor: 9.7
 quartile: "Q1"
 ccf: "A"
+top: true
 arxiv: "2504.09906"
 paperUrl: "https://ieeexplore.ieee.org/document/11498444"
 code: "https://github.com/tinyzqh/PA-MoE"
