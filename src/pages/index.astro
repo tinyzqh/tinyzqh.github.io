@@ -207,7 +207,10 @@ const label =
             <span class="shrink-0 text-[0.9375rem] tabular-nums text-muted/70">
               {n.data.period ?? fmtYear(n.data.date)}
             </span>
-            <span class="text-[0.9375rem] leading-relaxed text-fg/90">{n.data.title}</span>
+            <span class="text-[0.9375rem] leading-relaxed text-fg/90">
+              {n.data.title}
+              {n.data.href && <a href={n.data.href} class={`${link} ml-1.5 text-[0.8125rem] text-muted/70 hover:text-fg`} target="_blank" rel="noopener">Certificate</a>}
+            </span>
           </li>
         ))}
       </ol>
