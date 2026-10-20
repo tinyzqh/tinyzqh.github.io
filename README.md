@@ -30,6 +30,21 @@ npm run preview           # preview the production build
 Add a new publication: drop a markdown file in `src/content/publications/`.
 Schema is enforced — see `src/content/config.ts`.
 
+Write a blog post: add `src/content/blog/<slug>.md` — it is served at `/blog/<slug>/`.
+
+```yaml
+---
+title: Post title
+description: One-sentence summary (list page, RSS, social cards)
+date: 2026-10-20
+tags: [rl]
+draft: true        # visible under `npm run dev` only; remove to publish
+---
+```
+
+Math uses KaTeX (`$inline$`, `$$display$$`); code blocks are highlighted by Shiki.
+The feed is at `/rss.xml`.
+
 ## Deploy
 
 Push to `master`. GitHub Actions builds and deploys to the `gh-pages` branch,

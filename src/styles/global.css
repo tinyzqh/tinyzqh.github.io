@@ -101,6 +101,51 @@
 
 }
 
+/* ----- Blog post body: typography plugin wired to the site tokens ----- */
+.prose-site {
+  --tw-prose-body: oklch(var(--fg) / 0.88);
+  --tw-prose-headings: oklch(var(--fg));
+  --tw-prose-lead: oklch(var(--muted));
+  --tw-prose-links: oklch(var(--accent));
+  --tw-prose-bold: oklch(var(--fg));
+  --tw-prose-counters: oklch(var(--muted));
+  --tw-prose-bullets: oklch(var(--muted) / 0.6);
+  --tw-prose-hr: oklch(var(--border) / 0.6);
+  --tw-prose-quotes: oklch(var(--fg) / 0.8);
+  --tw-prose-quote-borders: oklch(var(--border));
+  --tw-prose-captions: oklch(var(--muted));
+  --tw-prose-code: oklch(var(--fg));
+  --tw-prose-pre-code: oklch(var(--fg));
+  --tw-prose-pre-bg: oklch(var(--bg-elevated));
+  --tw-prose-th-borders: oklch(var(--border));
+  --tw-prose-td-borders: oklch(var(--border) / 0.6);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+.prose-site a { text-underline-offset: 3px; text-decoration-color: oklch(var(--accent) / 0.35); }
+.prose-site a:hover { color: oklch(var(--accent-hover)); text-decoration-color: currentColor; }
+.prose-site :where(h2, h3) { letter-spacing: -0.015em; }
+.prose-site :where(pre) { border: 1px solid oklch(var(--border) / 0.6); border-radius: 0.5rem; }
+.prose-site :where(img) { border-radius: 0.5rem; }
+.prose-site :where(:not(pre) > code) {
+  font-weight: 500;
+  font-size: 0.875em;
+  padding: 0.1em 0.35em;
+  border-radius: 0.25rem;
+  background: oklch(var(--bg-subtle));
+}
+.prose-site :where(:not(pre) > code)::before,
+.prose-site :where(:not(pre) > code)::after { content: none; }
+/* Long display equations scroll instead of overflowing on phones */
+.prose-site .katex-display { overflow-x: auto; overflow-y: hidden; padding: 0.25rem 0; }
+
+/* Shiki emits both themes; switch to the dark colours with the site theme */
+html.dark .astro-code,
+html.dark .astro-code span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+}
+
 /* CJK characters lack italic forms — strip the italic transform when used in serif italic context */
 :is(h1, h2, h3, h4, p, span, em, i, li):lang(zh),
 .font-serif:is(span):where(*) {

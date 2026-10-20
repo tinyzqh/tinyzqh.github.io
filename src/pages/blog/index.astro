@@ -1,0 +1,74 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { getPosts, fmtDate } from '~/lib/blog';
+
+const posts = await getPosts();
+
+// posts is newest-first, so year groups come out in order
+const groups: { year: number; items: typeof posts }[] = [];
+for (const p of posts) {
+  const year = p.data.date.getUTCFullYear();
+  const g = groups.at(-1);
+  if (g && g.year === year) g.items.push(p);
+  else groups.push({ year, items: [p] });
+}
+
+const link =
+  'underline decoration-transparent underline-offset-[3px] transition-colors duration-200 hover:decoration-current';
+const row = 'grid gap-x-10 gap-y-3 sm:grid-cols-[6.5rem_minmax(0,1fr)]';
+const label =
+  'text-[11px] font-medium uppercase tracking-[0.16em] text-muted/70 sm:pt-1';
+---
+
+<BaseLayout
+  title="Blog"
+  description="Notes by Zhiqiang He on reinforcement learning and getting AI to work in the real world."
+>
+  <div class="mx-auto max-w-[68rem] px-6 py-20 sm:py-28">
+    <header class={row}>
+      <h2 class={label}>Blog</h2>
+
+      <div>
+        <h1 class="text-[1.75rem] font-semibold leading-tight tracking-[-0.02em] sm:text-[2rem]">
+          Blog
+        </h1>
+
+        <p class="mt-4 max-w-[72ch] text-[1.0625rem] leading-[1.7] text-fg/90">
+          Notes on reinforcement learning, research, and getting agents to work outside the simulator.
+        </p>
+
+        <p class="mt-3 text-[0.875rem] text-muted/70">
+          <a href="/rss.xml" class={`${link} hover:text-fg`}>RSS</a>
+        </p>
+      </div>
+    </header>
+
+    {posts.length === 0 && (
+      <p class={`${row} mt-16`}><span></span><span class="text-muted">No posts yet.</span></p>
+    )}
+
+    {groups.map((g) => (
+      <section class={`${row} mt-16`}>
+        <h2 class={`${label} tabular-nums`}>{g.year}</h2>
+
+        <ol class="space-y-8">
+          {g.items.map((p) => (
+            <li>
+              <a href={`/blog/${p.id}/`} class="group block">
+                <h3 class="text-[1.0625rem] font-medium leading-snug tracking-[-0.01em] text-fg underline decoration-transparent underline-offset-[3px] transition-colors group-hover:decoration-current">
+                  {p.data.title}
+                  {p.data.draft && <span class="ml-2 rounded-full border border-border/60 px-2 py-px align-[0.12em] text-[0.6875rem] font-medium uppercase tracking-[0.06em] text-muted/70">Draft</span>}
+                </h3>
+                <p class="mt-1.5 max-w-[82ch] text-[0.9375rem] leading-relaxed text-muted">{p.data.description}</p>
+              </a>
+              <p class="mt-1.5 flex flex-wrap gap-x-3 text-[0.8125rem] text-muted/60">
+                <time datetime={p.data.date.toISOString()} class="tabular-nums">{fmtDate(p.data.date)}</time>
+                {p.data.tags.map((t) => <span>#{t}</span>)}
+              </p>
+            </li>
+          ))}
+        </ol>
+      </section>
+    ))}
+  </div>
+</BaseLayout>

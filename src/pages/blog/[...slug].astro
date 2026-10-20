@@ -1,0 +1,82 @@
+---
+import 'katex/dist/katex.min.css';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { render } from 'astro:content';
+import { getPosts, fmtDate, readingMinutes, type Post } from '~/lib/blog';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  // posts is newest-first: index - 1 is the newer post, index + 1 the older one
+  return posts.map((post, i) => ({
+    params: { slug: post.id },
+    props: { post, newer: posts[i - 1], older: posts[i + 1] },
+  }));
+}
+
+interface Props {
+  post: Post;
+  newer?: Post;
+  older?: Post;
+}
+
+const { post, newer, older } = Astro.props;
+const { Content } = await render(post);
+const { title, description, date, updated, tags } = post.data;
+
+const link =
+  'underline decoration-transparent underline-offset-[3px] transition-colors duration-200 hover:decoration-current';
+const row = 'grid gap-x-10 gap-y-3 sm:grid-cols-[6.5rem_minmax(0,1fr)]';
+const label =
+  'text-[11px] font-medium uppercase tracking-[0.16em] text-muted/70 sm:pt-1';
+---
+
+<BaseLayout title={title} description={description} ogType="article" noIndex={post.data.draft}>
+  <article class="mx-auto max-w-[68rem] px-6 py-20 sm:py-28">
+    <header class={row}>
+      <a href="/blog/" class={`${label} ${link} hover:text-fg`}>Blog</a>
+
+      <div>
+        <h1 class="max-w-[30ch] text-[1.75rem] font-semibold leading-tight tracking-[-0.02em] sm:text-[2rem]">
+          {title}
+        </h1>
+        <p class="mt-3 flex flex-wrap gap-x-3 text-[0.875rem] text-muted/70">
+          <time datetime={date.toISOString()} class="tabular-nums">{fmtDate(date)}</time>
+          {updated && <span>Updated <time datetime={updated.toISOString()}>{fmtDate(updated)}</time></span>}
+          <span>{readingMinutes(post.body)} min read</span>
+          {tags.map((t) => <span>#{t}</span>)}
+        </p>
+      </div>
+    </header>
+
+    <div class={`${row} mt-12`}>
+      <span></span>
+      <div class="prose-site prose max-w-[72ch]">
+        <Content />
+      </div>
+    </div>
+
+    {(newer || older) && (
+      <nav class={`${row} mt-20`}>
+        <span></span>
+        <div class="grid gap-6 border-t border-border/40 pt-6 text-[0.9375rem] sm:grid-cols-2">
+          <div>
+            {older && (
+              <a href={`/blog/${older.id}/`} class="group block">
+                <span class="text-[0.8125rem] text-muted/60">← Older</span>
+                <span class="mt-1 block text-fg/90 group-hover:underline underline-offset-[3px]">{older.data.title}</span>
+              </a>
+            )}
+          </div>
+          <div class="sm:text-right">
+            {newer && (
+              <a href={`/blog/${newer.id}/`} class="group block">
+                <span class="text-[0.8125rem] text-muted/60">Newer →</span>
+                <span class="mt-1 block text-fg/90 group-hover:underline underline-offset-[3px]">{newer.data.title}</span>
+              </a>
+            )}
+          </div>
+        </div>
+      </nav>
+    )}
+  </article>
+</BaseLayout>
