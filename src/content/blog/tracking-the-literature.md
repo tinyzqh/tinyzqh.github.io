@@ -3,7 +3,6 @@ title: Four Tools I Use to Keep Up with the Literature
 description: Google Scholar citations, a trained Twitter feed, alphaXiv likes, and Connected Papers — how I find the papers worth reading without reading everything.
 date: 2026-10-20
 tags: [research, tools]
-draft: true
 ---
 
 Reinforcement learning alone puts dozens of new papers on arXiv every day. Finding papers is not the hard part; the hard part is not missing the few that matter, and not drowning in the rest. Over the past few years I have settled on four tools, each answering a different question:
